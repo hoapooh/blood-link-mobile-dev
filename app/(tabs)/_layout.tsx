@@ -1,45 +1,67 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { SignOutButton } from "@/features/auth/ui/components/sign-out-button";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import React from "react";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+const TabsLayout = () => {
+	return (
+		<Tabs
+			screenOptions={{
+				tabBarStyle: {
+					alignItems: "center",
+					justifyContent: "center",
+					paddingTop: 10,
+					height: 70,
+					borderTopWidth: 0,
+					elevation: 0,
+					shadowOpacity: 0,
+					backgroundColor: "#fffafa",
+				},
+				headerStyle: {
+					backgroundColor: "#fffafa",
+					elevation: 0,
+					shadowOpacity: 0,
+					borderBottomWidth: 0,
+				},
+				headerTitleStyle: {
+					fontWeight: "bold",
+				},
+				headerTintColor: "#ef4444",
+				tabBarActiveTintColor: "#ef4444",
+				tabBarInactiveTintColor: "#6b7280",
+				headerShadowVisible: false,
+				headerTitleAlign: "center",
+				headerRight: () => <SignOutButton />,
+			}}
+		>
+			<Tabs.Screen
+				name="home"
+				options={{
+					title: "Home",
+					headerShown: true,
+					tabBarIcon: ({ color }) => <Ionicons name="home" size={26} color={color} />,
+				}}
+			/>
+			<Tabs.Screen
+				name="progress"
+				options={{
+					title: "Progress",
+					headerShown: true,
+					tabBarIcon: ({ color }) => (
+						<MaterialCommunityIcons name="form-select" size={26} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="test"
+				options={{
+					title: "Test",
+					headerShown: true,
+					tabBarIcon: ({ color }) => <Ionicons name="water" size={26} color={color} />,
+				}}
+			/>
+		</Tabs>
+	);
+};
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
-}
+export default TabsLayout;
