@@ -19,7 +19,7 @@ import { isClerkAPIResponseError, useSignUp } from "@clerk/clerk-expo";
 import { ClerkAPIError } from "@clerk/types";
 import { Feather } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Keyboard } from "react-native";
@@ -110,9 +110,17 @@ export default function SignUpForm() {
 			<VStack className="items-center" space="xs">
 				<Heading size="3xl">Sign up</Heading>
 				<Text bold size="lg">
-					Sign up and start using{" "}
-					<Text bold size="lg">
-						CapyCloset
+					Sign up and start using <Text></Text>
+					<Text
+						size="xl"
+						bold
+						className="text-red-500 font-bold"
+						onPress={() => router.push("/home")}
+					>
+						Blood
+					</Text>
+					<Text size="xl" className="text-black">
+						Link
 					</Text>
 				</Text>
 			</VStack>

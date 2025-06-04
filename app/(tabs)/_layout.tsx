@@ -43,9 +43,9 @@ const TabsLayout = () => {
 				}}
 			/>
 			<Tabs.Screen
-				name="progress"
+				name="request"
 				options={{
-					title: "Progress",
+					title: "Request",
 					headerShown: true,
 					tabBarIcon: ({ color }) => (
 						<MaterialCommunityIcons name="form-select" size={26} color={color} />
@@ -53,9 +53,9 @@ const TabsLayout = () => {
 				}}
 			/>
 			<Tabs.Screen
-				name="test"
+				name="profile"
 				options={{
-					title: "Test",
+					title: "Profile",
 					headerShown: true,
 					tabBarIcon: ({ color }) => <Ionicons name="water" size={26} color={color} />,
 				}}
