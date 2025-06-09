@@ -1,8 +1,8 @@
+import HomePage from "@/features/home/ui/layout/home-page";
 import { SignedOut, useUser } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
 import React from "react";
 import { Text, View } from "react-native";
-import CampaignList from "../../features/home/ui/layout/campaign-list";
 const Index = () => {
 	const { user } = useUser();
 
@@ -23,7 +23,7 @@ const Index = () => {
 					<Text>Sign up</Text>
 				</Link>
 			</SignedOut>
-			<CampaignList/>
+			<HomePage/>
 		</View>
 	);
 };

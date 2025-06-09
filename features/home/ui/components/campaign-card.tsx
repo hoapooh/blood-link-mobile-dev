@@ -6,64 +6,119 @@ import { CalendarDaysIcon, Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import dayjs from "dayjs";
-import { MapPin } from "lucide-react-native";
+import { ClockIcon, MapPin, UsersIcon } from "lucide-react-native";
 import React from "react";
 
 interface CampaignCardProps {
+  id: string;
   name: string;
   description: string;
-  startDate: string;
-  endDate: string;
-  location?: string;
+  startDateTime: string;
+  endDateTime: string;
+  address: string;
+  enrolled: number;
+  maxEnrolled: number;
   onRequest?: () => void;
 }
 
 const CampaignCard: React.FC<CampaignCardProps> = ({
   name,
   description,
-  startDate,
-  endDate,
-  location = "To Be Announced",
+  startDateTime,
+  endDateTime,
+  address,
+  enrolled,
+  maxEnrolled,
   onRequest,
 }) => {
+  const start = dayjs(startDateTime);
+  const end = dayjs(endDateTime);
+  const now = dayjs();
+
+  let status = "Active";
+  if (now.isBefore(start)) status = "Upcoming";
+  else if (now.isAfter(end)) status = "Completed";
+
+  const statusColors: any = {
+    Upcoming: {
+      bg: "bg-blue-100",
+      text: "text-blue-600",
+    },
+    Active: {
+      bg: "bg-green-100",
+      text: "text-green-600",
+    },
+    Completed: {
+      bg: "bg-gray-200",
+      text: "text-gray-600",
+    },
+  };
+
   return (
     <Card className="p-4 border border-outline-200 rounded-xl bg-white shadow-sm w-full">
       <VStack space="md">
-        {/* Header with campaign name */}
+        {/* Header */}
         <HStack className="justify-between items-start">
           <VStack className="flex-1 pr-2">
             <Text className="text-lg font-bold text-red-600">{name}</Text>
             <Text className="text-sm text-typography-600">{description}</Text>
           </VStack>
-
-          <Badge className="bg-info-100 px-3 py-1 rounded-full">
-            <BadgeText className="text-info-600 text-xs font-medium">Upcoming</BadgeText>
+          <Badge
+            className={`${statusColors[status].bg} px-3 py-1 rounded-full`}
+          >
+            <BadgeText
+              className={`${statusColors[status].text} text-xs font-medium`}
+            >
+              {status}
+            </BadgeText>
           </Badge>
         </HStack>
 
-        {/* Location and dates */}
-        <VStack space="sm">
-          <HStack className="items-center" space="sm">
-            <Icon as={MapPin} size="sm" className="text-typography-500" />
-            <Text className="text-sm text-typography-600 flex-1">{location}</Text>
-          </HStack>
+        {/* Address */}
+        <HStack className="items-center" space="sm">
+          <Icon as={MapPin} size="sm" className="text-red-500 mr-2" />
+          <Text className="text-sm text-typography-600 flex-1">{address}</Text>
+        </HStack>
 
-          <HStack className="items-center" space="sm">
-            <Icon as={CalendarDaysIcon} size="sm" className="text-typography-500" />
-            <Text className="text-sm text-typography-600">
-               {dayjs(startDate).format("MMM D, YYYY")} → {dayjs(endDate).format("MMM D, YYYY")}
-            </Text>
-          </HStack>
-        </VStack>
+        {/* Date */}
+        <HStack className="items-center" space="sm">
+          <Icon as={CalendarDaysIcon} size="sm" className="text-red-500 mr-2" />
+          <Text className="text-sm text-typography-600">
+            {start.format("MMM D, YYYY")}
+          </Text>
+        </HStack>
 
-        {/* Action button */}
+        {/* Time */}
+        <HStack className="items-center" space="sm">
+          <Icon as={ClockIcon} size="sm" className="text-red-500 mr-2" />
+          <Text className="text-sm text-typography-600">
+            {start.format("hh:mm A")} → {end.format("hh:mm A")}
+          </Text>
+        </HStack>
+
+        {/* People Enrolled */}
+        <HStack className="items-center" space="sm">
+          <Icon as={UsersIcon} size="sm" className="text-red-500 mr-2" />
+          <Text className="text-sm text-typography-600">
+            {enrolled} / {maxEnrolled} people enrolled
+          </Text>
+        </HStack>
+
+        {/* Action Button */}
         <Button
           variant="solid"
           action="primary"
           className="bg-red-500 mt-2"
           onPress={onRequest}
+          isDisabled={status === "Completed" || enrolled >= maxEnrolled}
         >
-          <ButtonText className="text-white">Send Request</ButtonText>
+          <ButtonText className="text-white">
+            {status === "Completed"
+              ? "Campaign Ended"
+              : enrolled >= maxEnrolled
+              ? "Campaign Full"
+              : "Send Request"}
+          </ButtonText>
         </Button>
       </VStack>
     </Card>
