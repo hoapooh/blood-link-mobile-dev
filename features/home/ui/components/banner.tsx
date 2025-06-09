@@ -5,7 +5,7 @@ import { VStack } from "@/components/ui/vstack";
 
 const HomeBanner = () => {
   return (
-    <Box className="bg-red-500 text-white px-4 py-5 rounded-xl text-center w-full">
+    <Box className="bg-red-700 text-white px-4 py-5 text-center w-full">
       <VStack className="items-center space-y-4">
         <Text className="text-white/90 text-2xl md:text-4xl font-bold">
           Save Lives Today
@@ -14,16 +14,16 @@ const HomeBanner = () => {
           Join our blood donation campaigns and make a difference
         </Text>
 
-        <HStack className="bg-white/10 backdrop-blur-sm mt-6 px-6 py-4 rounded-xl justify-between w-full max-w-2xl space-x-4">
-          <VStack className="items-center">
+        <HStack className="flex w-full max-w-2xl bg-white/10 backdrop-blur-sm mt-6 px-6 py-4 rounded-xl">
+          <VStack className="flex-1 items-center">
             <Text className="text-2xl font-bold text-white">247</Text>
             <Text className="text-sm text-white/80">Lives Saved</Text>
           </VStack>
-          <VStack className="items-center">
+          <VStack className="flex-1 items-center">
             <Text className="text-2xl font-bold text-white">15</Text>
             <Text className="text-sm text-white/80">Active Campaigns</Text>
           </VStack>
-          <VStack className="items-center">
+          <VStack className="flex-1 items-center">
             <Text className="text-2xl font-bold text-white">892</Text>
             <Text className="text-sm text-white/80">Donors</Text>
           </VStack>
