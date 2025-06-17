@@ -1,4 +1,5 @@
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { AuthProvider } from "@/features/auth/ui/auth-provider";
 import { ClerkProvider } from "@clerk/clerk-expo";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import {
@@ -42,12 +43,22 @@ export default function RootLayout() {
 		return () => subscription.remove();
 	}, []);
 
+	const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+	if (!publishableKey) {
+		throw new Error(
+			"Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env"
+		);
+	}
+
 	return (
-		<ClerkProvider tokenCache={tokenCache}>
+		<ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
 			<QueryClientProvider client={queryClient}>
-				<GluestackUIProvider mode="light">
-					<Stack screenOptions={{ headerShown: false }} />
-				</GluestackUIProvider>
+				<AuthProvider>
+					<GluestackUIProvider mode="light">
+						<Stack screenOptions={{ headerShown: false }} />
+					</GluestackUIProvider>
+				</AuthProvider>
 			</QueryClientProvider>
 		</ClerkProvider>
 	);

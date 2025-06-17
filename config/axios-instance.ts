@@ -1,21 +1,27 @@
-import { clearAuthLocalStorage, getTokenFromLocalStorage } from "@/utils/auth-utils";
+import { clearAuthLocalStorage } from "@/utils/auth-utils";
 import axios from "axios";
 
 const axiosInstance = axios.create({
 	baseURL: process.env.EXPO_PUBLIC_API_URL,
 });
 
+// Function to set the auth token dynamically
+export const setAuthToken = (token: string | null) => {
+	if (token) {
+		axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+	} else {
+		delete axiosInstance.defaults.headers.common["Authorization"];
+	}
+};
+
 // Add request interceptor
 axiosInstance.interceptors.request.use(
 	async (config) => {
-		const token = await getTokenFromLocalStorage();
-		if (token) {
-			config.headers.Authorization = `Bearer ${token}`;
-		}
 		if (!config.headers.Accept && config.headers["Content-Type"]) {
 			config.headers.Accept = "application/json";
 			config.headers["Content-Type"] = "application/json; charset=utf-8";
 		}
+
 		return config;
 	},
 	(error) => {
