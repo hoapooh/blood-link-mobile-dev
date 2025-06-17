@@ -1,9 +1,8 @@
 import { IBase } from "./base";
+import { BloodGroup, BloodRh } from "./blood";
 
 export interface IUserData {
 	id: string;
-	name: string;
-	email: string;
 	createdAt: string;
 	updatedAt: string;
 	account: {
@@ -29,3 +28,20 @@ export interface IUserData {
 }
 
 export type IUser = IBase<IUserData>;
+
+// PATCH
+export interface IUserUpdate {
+	firstName?: string | null;
+	lastName?: string | null;
+	phone?: string | null;
+	longitude?: string | null;
+	latitude?: string | null;
+	wardCode?: string | null;
+	districtCode?: string | null;
+	provinceCode?: string | null;
+	wardName?: string | null;
+	districtName?: string | null;
+	provinceName?: string | null;
+	bloodGroup?: BloodGroup | null;
+	bloodRh?: BloodRh | null;
+}

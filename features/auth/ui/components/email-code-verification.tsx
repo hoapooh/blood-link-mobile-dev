@@ -1,4 +1,5 @@
 import { Button, ButtonText } from "@/components/ui/button";
+import { HStack } from "@/components/ui/hstack";
 import { Input, InputField } from "@/components/ui/input";
 import { useSignUp } from "@clerk/clerk-expo";
 import { router } from "expo-router";
@@ -23,7 +24,7 @@ const EmailCodeVerfication = () => {
 			// and redirect the user
 			if (signUpAttempt.status === "complete") {
 				await setActive({ session: signUpAttempt.createdSessionId });
-				router.replace("/home");
+				router.replace("/sign-in");
 			} else {
 				// If the status is not complete, check why. User may need to
 				// complete further steps.
@@ -37,7 +38,7 @@ const EmailCodeVerfication = () => {
 	};
 
 	return (
-		<>
+		<HStack space="md">
 			<Text>Verify your email</Text>
 			<Input variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false}>
 				<InputField
@@ -49,7 +50,7 @@ const EmailCodeVerfication = () => {
 			<Button size="md" variant="solid" action="primary" onPress={onVerifyPress}>
 				<ButtonText>Verify</ButtonText>
 			</Button>
-		</>
+		</HStack>
 	);
 };
 

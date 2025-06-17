@@ -1,3 +1,4 @@
+import { IUser } from "@/interfaces/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN_KEY = "blood_link_auth_token";
@@ -25,6 +26,18 @@ export const setTokenToLocalStorage = async (token: string): Promise<void> => {
 		await AsyncStorage.setItem(TOKEN_KEY, token);
 	} catch (error) {
 		console.error("Error setting token:", error);
+	}
+};
+
+export const setUserInfoToLocalStorage = async (userInfo: IUser): Promise<void> => {
+	try {
+		if (!userInfo) {
+			throw new Error("User info cannot be null");
+		}
+		await AsyncStorage.setItem(USER_INFO_KEY, JSON.stringify(userInfo));
+	} catch (error) {
+		console.error("Error setting user info:", error);
+		throw error; // Propagate error for handling
 	}
 };
 
