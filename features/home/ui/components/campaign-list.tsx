@@ -1,8 +1,9 @@
 import { Box } from "@/components/ui/box";
+import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { useRouter } from "expo-router";
 import React from "react";
 import CampaignCard from "./campaign-card";
-
 
 const campaigns = [
   {
@@ -38,8 +39,18 @@ const campaigns = [
 ];
 
 const CampaignList = () => {
+
+  const router = useRouter();
+
+  const handleViewDetails = (id: string) => {
+    router.push({ pathname: "/(campaign)/[id]", params: { id } });
+  };
+
   return (
     <Box className="flex-1 w-full min-h-0">
+      <Text className="text-2xl md:text-4xl font-bold px-4 py-6">
+        All Campaigns
+      </Text>
       <VStack space="xl">
         {campaigns.map((item) => (
           <CampaignCard
@@ -52,7 +63,7 @@ const CampaignList = () => {
             address={item.address}
             enrolled={item.enrolled}
             maxEnrolled={item.maxEnrolled}
-            onRequest={() => console.log("Request sent for:", item.name)}
+            onRequest={() => handleViewDetails(item.id)}
           />
         ))}
       </VStack>

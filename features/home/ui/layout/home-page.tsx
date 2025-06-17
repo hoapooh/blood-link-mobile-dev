@@ -11,7 +11,7 @@ export default function HomePage() {
       <ScrollView className="flex-1 w-full">
         <HomeBanner />
         <Introduction/>
-        <Box className="flex-1 mt-6 mb-4 p-4 min-h-0">
+        <Box className="flex-1 p-4 min-h-0">
           <CampaignList />
         </Box>
       </ScrollView>

@@ -110,14 +110,15 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
           action="primary"
           className="bg-red-500 mt-2"
           onPress={onRequest}
-          isDisabled={status === "Completed" || enrolled >= maxEnrolled}
+          // isDisabled={status === "Completed" || enrolled >= maxEnrolled}
         >
           <ButtonText className="text-white">
-            {status === "Completed"
+            {/* {status === "Completed"
               ? "Campaign Ended"
               : enrolled >= maxEnrolled
               ? "Campaign Full"
-              : "Send Request"}
+              : "Send Request"} */}
+              View Details
           </ButtonText>
         </Button>
       </VStack>

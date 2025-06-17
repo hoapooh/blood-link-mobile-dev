@@ -1,4 +1,4 @@
-import CampaignDetail from "@/features/campaign-detail/layout/campaign-detail-layout";
+import HomePage from "@/features/home/ui/layout/home-page";
 import { SignedOut, useUser } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
 import React from "react";
@@ -23,8 +23,8 @@ const Index = () => {
 					<Text>Sign up</Text>
 				</Link>
 			</SignedOut>
-			{/* <HomePage/> */}
-			<CampaignDetail/>
+			<HomePage/>
+			{/* <CampaignDetail/> */}
 		</View>
 	);
 };

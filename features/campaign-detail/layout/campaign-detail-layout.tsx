@@ -1,4 +1,5 @@
 import { Box } from "@/components/ui/box";
+import { useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { ScrollView } from "react-native";
 import BannerImage from "../components/BannerImage";
@@ -13,6 +14,8 @@ interface RegistrationData {
   email: string;
 }
 export default function CampaignDetail() {
+  const { id } = useLocalSearchParams();
+  
   const [isFormOpen, setIsFormOpen] = useState(false);
   
     const handleRegistration = () => {
