@@ -10,6 +10,7 @@ import CampaignCard from "./campaign-card";
 const CampaignList = () => {
   const router = useRouter();
   const { campaigns, isLoading, isError, error, refetch } = useGetCampaigns();
+  
   const handleViewDetails = (id: string) => {
     router.push({ pathname: "/(campaign)/[id]", params: { id } });
   };
@@ -43,7 +44,7 @@ const CampaignList = () => {
         Tất cả chiến dịch
       </Text>
       <VStack space="xl">
-        {campaigns?.data.map((item: ICampaignData) => (
+        {campaigns?.map((item: ICampaignData) => (
           <CampaignCard
             key={item.id}
             id={item.id}

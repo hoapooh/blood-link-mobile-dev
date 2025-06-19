@@ -1,12 +1,13 @@
 import axiosInstance from "@/config/axios-instance";
 import { isAxiosError } from "axios";
-import { ICampaign } from "./../interfaces/campaign";
+import { ICampaignDetail, ICampaignList } from "./../interfaces/campaign";
 
 export const campaignApi = {
-  getAllCampaign: async (params?: Record<string, any>): Promise<ICampaign> => {
+  getAllCampaign: async (params?: Record<string, any>): Promise<ICampaignList> => {
     try {
       const response = await axiosInstance.get("/campaigns", { params });
-      return response.data;
+      // console.log("Response from API:", response.data.data);
+      return response.data.data;
     } catch (error) {
       if (isAxiosError(error)) {
         throw new Error(
@@ -17,7 +18,7 @@ export const campaignApi = {
     }
   },
 
-  getCampaignById: async (campaignId: string): Promise<ICampaign> => {
+  getCampaignById: async (campaignId: string): Promise<ICampaignDetail> => {
     try {
       const response = await axiosInstance.get(`/campaigns/${campaignId}`);
       return response.data;

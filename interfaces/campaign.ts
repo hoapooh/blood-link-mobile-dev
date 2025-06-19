@@ -22,17 +22,16 @@ export interface ICampaignData {
 }
 
 // Interface with metadata for paginated campaign responses
-// export interface ICampaignMeta {
-// 	page: number;
-// 	limit: number;
-// 	total: number;
-// 	totalPages: number;
-// 	hasNextPage: boolean;
-// 	hasPreviousPage: boolean;
-// }
-
-export interface ICampaignResponse {
-	data: ICampaignData[];
-	// meta: ICampaignMeta;
+export interface ICampaignMeta {
+	page: number;
+	limit: number;
+	total: number;
+	totalPages: number;
+	hasNextPage: boolean;
+	hasPreviousPage: boolean;
 }
-export type ICampaign = IBase<ICampaignResponse>;
+
+
+export type ICampaignList = IBase<ICampaignData[]>;
+export type ICampaignDetail = IBase<ICampaignData>;
+export type ICampaignPagination = IBase<ICampaignMeta>;

@@ -1,4 +1,4 @@
-import CampaignDetail from "@/features/campaign-detail/layout/campaign-detail-layout";
+import CampaignDetail from "@/features/campaign-detail/ui/layout/campaign-detail-layout";
 import { useUser } from "@clerk/clerk-expo";
 import React from "react";
 import { View } from "react-native";
