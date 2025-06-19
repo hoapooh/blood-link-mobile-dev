@@ -2,62 +2,66 @@ import { Badge, BadgeText } from "@/components/ui/badge";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/hstack";
-import { CalendarDaysIcon, Icon } from "@/components/ui/icon";
+import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { CampaignStatus, ICampaignData } from "@/interfaces/campaign";
 import dayjs from "dayjs";
-import { ClockIcon, MapPin, UsersIcon } from "lucide-react-native";
+import {
+  CalendarDaysIcon,
+  ClockIcon,
+  MapPin,
+  UsersIcon,
+} from "lucide-react-native";
 import React from "react";
+import { Image } from "react-native";
 
-interface CampaignCardProps {
-  id: string;
-  name: string;
-  description: string;
-  startDateTime: string;
-  endDateTime: string;
-  address: string;
-  enrolled: number;
-  maxEnrolled: number;
+interface CampaignCardProps extends ICampaignData {
   onRequest?: () => void;
+  enrolled?: number;
 }
 
 const CampaignCard: React.FC<CampaignCardProps> = ({
   name,
   description,
-  startDateTime,
-  endDateTime,
-  address,
-  enrolled,
-  maxEnrolled,
+  startDate,
+  endDate,
+  status,
+  banner,
+  location,
+  limitDonation,
   onRequest,
+  enrolled = 0,
 }) => {
-  const start = dayjs(startDateTime);
-  const end = dayjs(endDateTime);
-  const now = dayjs();
+  const start = dayjs(startDate);
+  const end = dayjs(endDate);
 
-  let status = "Active";
-  if (now.isBefore(start)) status = "Upcoming";
-  else if (now.isAfter(end)) status = "Completed";
-
-  const statusColors: any = {
-    Upcoming: {
+  const statusColors: Record<CampaignStatus, { bg: string; text: string }> = {
+    [CampaignStatus.not_started]: {
       bg: "bg-blue-100",
       text: "text-blue-600",
     },
-    Active: {
+    [CampaignStatus.active]: {
       bg: "bg-green-100",
       text: "text-green-600",
     },
-    Completed: {
+    [CampaignStatus.ended]: {
       bg: "bg-gray-200",
       text: "text-gray-600",
     },
   };
 
   return (
-    <Card className="p-4 border border-outline-200 rounded-xl bg-white shadow-sm w-full">
-      <VStack space="md">
-        {/* Header */}
+    <Card className="p-0 border border-outline-200 rounded-xl bg-white shadow-sm overflow-hidden">
+      {/* Banner */}
+      <Image
+        source={{ uri: banner }}
+        style={{ width: "100%", height: 160 }}
+        resizeMode="cover"
+      />
+
+      <VStack space="md" className="p-4">
+        {/* Title + Status */}
         <HStack className="justify-between items-start">
           <VStack className="flex-1 pr-2">
             <Text className="text-lg font-bold text-red-600">{name}</Text>
@@ -74,17 +78,19 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
           </Badge>
         </HStack>
 
-        {/* Address */}
+        {/* Address Placeholder */}
         <HStack className="items-center" space="sm">
           <Icon as={MapPin} size="sm" className="text-red-500 mr-2" />
-          <Text className="text-sm text-typography-600 flex-1">{address}</Text>
+          <Text className="text-sm text-typography-600">
+            {location || "Location not specified"}
+          </Text>
         </HStack>
 
         {/* Date */}
         <HStack className="items-center" space="sm">
           <Icon as={CalendarDaysIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-600">
-            {start.format("MMM D, YYYY")}
+            {start.format("D/MM/YYYY")} → {end.format("D/MM/YYYY")}
           </Text>
         </HStack>
 
@@ -92,7 +98,8 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
         <HStack className="items-center" space="sm">
           <Icon as={ClockIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-600">
-            {start.format("hh:mm A")} → {end.format("hh:mm A")}
+            {/* {start.format("hh:mm A")} → {end.format("hh:mm A")} */}
+            07:30 → 16:30
           </Text>
         </HStack>
 
@@ -100,7 +107,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
         <HStack className="items-center" space="sm">
           <Icon as={UsersIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-600">
-            {enrolled} / {maxEnrolled} people enrolled
+            {enrolled} / {limitDonation} người tham gia
           </Text>
         </HStack>
 
@@ -110,16 +117,8 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
           action="primary"
           className="bg-red-500 mt-2"
           onPress={onRequest}
-          // isDisabled={status === "Completed" || enrolled >= maxEnrolled}
         >
-          <ButtonText className="text-white">
-            {/* {status === "Completed"
-              ? "Campaign Ended"
-              : enrolled >= maxEnrolled
-              ? "Campaign Full"
-              : "Send Request"} */}
-              View Details
-          </ButtonText>
+          <ButtonText className="text-white">Xem chi tiết</ButtonText>
         </Button>
       </VStack>
     </Card>

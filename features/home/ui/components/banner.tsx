@@ -8,24 +8,24 @@ const HomeBanner = () => {
     <Box className="bg-red-700 text-white px-4 py-5 text-center w-full">
       <VStack className="items-center space-y-4">
         <Text className="text-white/90 text-2xl md:text-4xl font-bold">
-          Save Lives Today
+          Hiến máu - Cứu người
         </Text>
-        <Text className="text-sm md:text-lg text-white/90 max-w-lg">
-          Join our blood donation campaigns and make a difference
+        <Text className="text-sm md:text-lg text-white/90 max-w-lg text-center mt-2">
+          Tham gia các chiến dịch hiến máu tình nguyện để sẻ chia sự sống, lan tỏa yêu thương.
         </Text>
 
         <HStack className="flex w-full max-w-2xl bg-white/10 backdrop-blur-sm mt-6 px-6 py-4 rounded-xl">
           <VStack className="flex-1 items-center">
             <Text className="text-2xl font-bold text-white">247</Text>
-            <Text className="text-sm text-white/80">Lives Saved</Text>
+            <Text className="text-sm text-white/80">Người được cứu</Text>
           </VStack>
           <VStack className="flex-1 items-center">
             <Text className="text-2xl font-bold text-white">15</Text>
-            <Text className="text-sm text-white/80">Active Campaigns</Text>
+            <Text className="text-sm text-white/80">Chiến dịch</Text>
           </VStack>
           <VStack className="flex-1 items-center">
             <Text className="text-2xl font-bold text-white">892</Text>
-            <Text className="text-sm text-white/80">Donors</Text>
+            <Text className="text-sm text-white/80">Người hiến máu</Text>
           </VStack>
         </HStack>
       </VStack>

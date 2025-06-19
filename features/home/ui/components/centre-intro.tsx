@@ -9,10 +9,10 @@ const Introduction = () => {
     <Box className="bg-white text-black px-4 py-10 text-center w-full">
       <VStack className="items-center">
         <Text className="text-black/90 text-xl md:text-4xl font-bold">
-          About Our Facility
+          Giới thiệu
         </Text>
         <Text className="text-sm md:text-lg text-center text-black/90 max-w-lg py-5">
-          We are a state-of-the-art medical facility dedicated to blood donation and transfusion services. With over 20 years of experience, we ensure the highest safety standards.
+          Chúng tôi là một cơ sở y tế hiện đại chuyên về hiến máu và truyền máu. Với hơn 20 năm kinh nghiệm, chúng tôi luôn tuân thủ các tiêu chuẩn an toàn cao nhất.
         </Text>
 
         <HStack className="flex w-full max-w-2xl mt-6 rounded-xl justify-center items-center">
@@ -20,21 +20,21 @@ const Introduction = () => {
             <Box className="bg-red-100 rounded-full p-3">
               <ShieldCheck color="red" size={24} />
             </Box>
-            <Text className="text-sm text-black">Safe & Secure</Text>
+            <Text className="text-sm text-black">An toàn & Bảo mật</Text>
           </VStack>
 
           <VStack className="flex-1 items-center space-y-2">
             <Box className="bg-red-100 rounded-full p-3">
               <Clock color="red" size={24} />
             </Box>
-            <Text className="text-sm text-black">24/7 Service</Text>
+            <Text className="text-sm text-black">Sẵn sàng phục vụ</Text>
           </VStack>
 
           <VStack className="flex-1 items-center space-y-2">
             <Box className="bg-red-100 rounded-full p-3">
               <BadgeCheck color="red" size={24} />
             </Box>
-            <Text className="text-sm text-black">Certified</Text>
+            <Text className="text-sm text-black">Được chứng nhận</Text>
           </VStack>
         </HStack>
       </VStack>
