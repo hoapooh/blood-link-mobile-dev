@@ -12,7 +12,10 @@ export interface IUserData {
 		email: string;
 		role: string;
 	};
-	bloodType: string | null;
+	bloodType: {
+		group: BloodGroup | null;
+		rh: BloodRh | null;
+	};
 	firstName: string | null;
 	lastName: string | null;
 	phone: string | null;
