@@ -28,7 +28,7 @@ import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { IDistrictItem, IProvinceItem, IWardItem } from "@/interfaces/location";
 import { IUserUpdate } from "@/interfaces/user";
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocationPicker } from "../../hooks/use-location-picker";
 
 interface LocationPickerDialogProps {
@@ -70,11 +70,11 @@ const LocationPickerDialog: React.FC<LocationPickerDialogProps> = ({
 	} = useLocationPicker(initialLocation);
 
 	// Reset when dialog opens
-	useEffect(() => {
+	/* useEffect(() => {
 		if (isOpen && !initialLocation) {
 			resetSelection();
 		}
-	}, [isOpen, initialLocation, resetSelection]);
+	}, [isOpen, initialLocation, resetSelection]); */
 
 	const handleSave = () => {
 		if (isComplete && selectedProvince && selectedDistrict && selectedWard) {
