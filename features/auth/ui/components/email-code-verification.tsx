@@ -1,6 +1,7 @@
 import { Button, ButtonText } from "@/components/ui/button";
 import { Input, InputField } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
+import { useSignUpStore } from "@/store/slice/signup/signup-store";
 import { useSignUp } from "@clerk/clerk-expo";
 import { router } from "expo-router";
 import React from "react";
@@ -8,6 +9,7 @@ import { Text } from "react-native";
 
 const EmailCodeVerfication = () => {
 	const { isLoaded, signUp, setActive } = useSignUp();
+	const { resetSignUpState } = useSignUpStore();
 	const [code, setCode] = React.useState("");
 
 	// Handle submission of verification form
@@ -18,12 +20,11 @@ const EmailCodeVerfication = () => {
 			// Use the code the user provided to attempt verification
 			const signUpAttempt = await signUp.attemptEmailAddressVerification({
 				code,
-			});
-
-			// If verification was completed, set the session to active
+			}); // If verification was completed, set the session to active
 			// and redirect the user
 			if (signUpAttempt.status === "complete") {
 				await setActive({ session: signUpAttempt.createdSessionId });
+				resetSignUpState(); // Reset signup state after successful verification
 				router.replace("/(tabs)/home");
 			} else {
 				// If the status is not complete, check why. User may need to
