@@ -125,7 +125,6 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, isLoading }) => {
 				<InfoRow label="Họ" value={user?.data?.lastName} />
 				<InfoRow label="Email" value={user?.data?.account.email} />
 				<InfoRow label="Số điện thoại" value={user?.data?.phone} />
-				<InfoRow label="Nhóm máu" value={user?.data?.bloodType} />
 				<AddressRow />
 			</View>
 			{/* Account Info */}

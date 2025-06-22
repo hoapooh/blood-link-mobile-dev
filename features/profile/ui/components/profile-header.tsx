@@ -38,14 +38,18 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, isLoading }) => {
 					<Text className="text-red-500 text-2xl font-bold">{getInitials(displayName)}</Text>
 				</View>
 				{/* Name */}
-				<Text className="text-white text-2xl font-bold mb-2">{displayName}</Text> {/* Email */}
+				<Text className="text-white text-2xl font-bold mb-2">{displayName}</Text>
+				{/* Email */}
 				<Text className="text-red-100 text-base mb-1">
 					{user?.data?.account.email || "Không có email"}
 				</Text>
 				{/* Blood Type */}
 				{user?.data?.bloodType && (
 					<View className="bg-red-600 px-3 py-1 rounded-full mt-2">
-						<Text className="text-white font-semibold">Nhóm máu: {user.data.bloodType}</Text>
+						<Text className="text-white font-semibold">
+							Nhóm máu: {user.data.bloodType.group}
+							{user.data.bloodType.rh}
+						</Text>
 					</View>
 				)}
 			</View>
