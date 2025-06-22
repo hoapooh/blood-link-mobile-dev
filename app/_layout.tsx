@@ -1,5 +1,5 @@
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { AuthProvider } from "@/features/auth/ui/auth-provider";
+import { AuthProvider } from "@/features/auth/ui/auth-provider-alternative";
 import { ClerkProvider } from "@clerk/clerk-expo";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import {
@@ -18,7 +18,9 @@ import "../global.css";
 export const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			staleTime: 1000 * 60, // 1 minutes
+			staleTime: 1000, // 1 seconds
+			refetchOnMount: true,
+			refetchOnWindowFocus: true,
 		},
 	},
 });

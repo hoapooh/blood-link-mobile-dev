@@ -4,14 +4,16 @@ import { useAuth } from "@clerk/clerk-expo";
 import { useEffect } from "react";
 
 export const useAuthSync = () => {
-	const { getToken, isSignedIn, isLoaded } = useAuth();
+	const { getToken, isSignedIn, isLoaded, sessionId } = useAuth();
 	const { login, logout, initializeAuth } = useAuthStore();
 
 	useEffect(() => {
+		console.log(JSON.stringify({ isSignedIn, sessionId }, null, 2));
+
 		const syncAuth = async () => {
 			if (!isLoaded) return;
 
-			if (isSignedIn) {
+			if (isSignedIn || sessionId) {
 				try {
 					const token = await getToken({
 						template: "default",
@@ -31,7 +33,7 @@ export const useAuthSync = () => {
 		};
 
 		syncAuth();
-	}, [isSignedIn, isLoaded, getToken, login, logout]);
+	}, [isSignedIn, isLoaded, getToken, login, logout, sessionId]);
 
 	// Initialize auth on app start
 	useEffect(() => {
