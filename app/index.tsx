@@ -1,10 +1,12 @@
-import { useAuthSync } from "@/features/auth/hooks/use-auth-sync";
+import { useAuthStore } from "@/store/slice/auth/auth-store";
 import { Redirect } from "expo-router";
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
 
 const IndexPage = () => {
-	const { isAuthenticated, isLoading } = useAuthSync();
+	const { isAuthenticated, isLoading, token } = useAuthStore();
+
+	console.log(JSON.stringify({ token, isAuthenticated }, null, 2));
 
 	// Show loading state while checking authentication
 	if (isLoading) {

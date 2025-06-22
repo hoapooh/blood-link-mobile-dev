@@ -1,5 +1,4 @@
-import { SignedOut, useUser } from "@clerk/clerk-expo";
-import { Link } from "expo-router";
+import { useUser } from "@clerk/clerk-expo";
 import React from "react";
 import { Text, View } from "react-native";
 
@@ -11,18 +10,9 @@ const Index = () => {
 			<Text className="text-4xl text-red-500 font-bold">
 				Blood<Text className="text-black">Link</Text>
 			</Text>
-			<Text className="text-2xl text-gray-700 dark:text-gray-300 mt-4">
+			<Text className="text-xl text-gray-700 dark:text-gray-300 mt-4 text-center">
 				Welcome, {user?.emailAddresses[0].emailAddress || "Guest"}!
 			</Text>
-
-			<SignedOut>
-				<Link href="/(auth)/sign-in">
-					<Text>Sign in</Text>
-				</Link>
-				<Link href="/(auth)/sign-up">
-					<Text>Sign up</Text>
-				</Link>
-			</SignedOut>
 		</View>
 	);
 };

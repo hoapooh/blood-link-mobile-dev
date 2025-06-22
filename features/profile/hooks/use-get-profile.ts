@@ -22,7 +22,6 @@ const useGetProfile = () => {
 		},
 		queryKey: ["user"],
 		enabled: isAuthenticated, // Only fetch when authenticated
-		staleTime: 5 * 60 * 1000, // 5 minutes
 		retry: (failureCount, error: any) => {
 			// Don't retry on 401 errors
 			if (error?.response?.status === 401) {
