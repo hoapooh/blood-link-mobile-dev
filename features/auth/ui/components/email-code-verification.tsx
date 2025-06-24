@@ -37,19 +37,18 @@ const EmailCodeVerfication = () => {
 			console.error(JSON.stringify(err, null, 2));
 		}
 	};
-
 	return (
 		<VStack space="md">
-			<Text>Verify your email</Text>
+			<Text>Xác thực email của bạn</Text>
 			<Input variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false}>
 				<InputField
 					value={code}
 					onChangeText={(code) => setCode(code)}
-					placeholder="Enter your verification code"
+					placeholder="Nhập mã xác thực"
 				/>
 			</Input>
 			<Button size="md" variant="solid" action="primary" onPress={onVerifyPress}>
-				<ButtonText>Verify</ButtonText>
+				<ButtonText>Xác thực</ButtonText>
 			</Button>
 		</VStack>
 	);

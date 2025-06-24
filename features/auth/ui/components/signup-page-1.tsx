@@ -94,12 +94,12 @@ export default function SignUpPage1() {
 	return (
 		<VStack className="max-w-[440px] w-full" space="md">
 			<VStack className="items-center" space="xs">
-				<Heading size="3xl">Sign up</Heading>
+				<Heading size="3xl">Đăng ký</Heading>
 				<Text bold size="lg">
-					Personal Information (1/2)
+					Thông tin cá nhân (1/2)
 				</Text>
 				<Text size="sm" className="text-gray-600">
-					Please fill in your personal details
+					Vui lòng điền thông tin cá nhân của bạn
 				</Text>
 			</VStack>
 
@@ -109,7 +109,7 @@ export default function SignUpPage1() {
 						{/* First Name */}
 						<FormControl isInvalid={!!form.formState.errors.firstName} className="flex-1">
 							<FormControlLabel>
-								<FormControlLabelText>First Name</FormControlLabelText>
+								<FormControlLabelText>Tên</FormControlLabelText>
 							</FormControlLabel>
 							<Controller
 								defaultValue=""
@@ -118,7 +118,7 @@ export default function SignUpPage1() {
 								render={({ field: { onChange, onBlur, value } }) => (
 									<Input>
 										<InputField
-											placeholder="First Name"
+											placeholder="Tên"
 											className="text-sm"
 											value={value}
 											onChangeText={onChange}
@@ -140,11 +140,10 @@ export default function SignUpPage1() {
 								</FormControlErrorText>
 							</FormControlError>
 						</FormControl>
-
 						{/* Last Name */}
 						<FormControl isInvalid={!!form.formState.errors.lastName} className="flex-1">
 							<FormControlLabel>
-								<FormControlLabelText>Last Name</FormControlLabelText>
+								<FormControlLabelText>Họ</FormControlLabelText>
 							</FormControlLabel>
 							<Controller
 								defaultValue=""
@@ -153,7 +152,7 @@ export default function SignUpPage1() {
 								render={({ field: { onChange, onBlur, value } }) => (
 									<Input>
 										<InputField
-											placeholder="Last Name"
+											placeholder="Họ"
 											className="text-sm"
 											value={value}
 											onChangeText={onChange}
@@ -176,11 +175,10 @@ export default function SignUpPage1() {
 							</FormControlError>
 						</FormControl>
 					</HStack>
-
 					{/* Citizen ID */}
 					<FormControl isInvalid={!!form.formState.errors.citizenId}>
 						<FormControlLabel>
-							<FormControlLabelText>Citizen ID</FormControlLabelText>
+							<FormControlLabelText>CCCD/CMND</FormControlLabelText>
 						</FormControlLabel>
 						<Controller
 							defaultValue=""
@@ -189,7 +187,7 @@ export default function SignUpPage1() {
 							render={({ field: { onChange, onBlur, value } }) => (
 								<Input>
 									<InputField
-										placeholder="Enter your citizen ID"
+										placeholder="Nhập số CCCD/CMND"
 										className="text-sm"
 										value={value}
 										onChangeText={onChange}
@@ -211,11 +209,10 @@ export default function SignUpPage1() {
 							</FormControlErrorText>
 						</FormControlError>
 					</FormControl>
-
 					{/* Gender */}
 					<FormControl isInvalid={!!form.formState.errors.gender}>
 						<FormControlLabel>
-							<FormControlLabelText>Gender</FormControlLabelText>
+							<FormControlLabelText>Giới tính</FormControlLabelText>
 						</FormControlLabel>
 						<Controller
 							name="gender"
@@ -224,14 +221,14 @@ export default function SignUpPage1() {
 								<Select selectedValue={value} onValueChange={onChange}>
 									<SelectTrigger variant="outline" size="xl">
 										<SelectInput
-											placeholder="Select your gender"
+											placeholder="Chọn giới tính"
 											value={
 												value === "male"
-													? "Male"
+													? "Nam"
 													: value === "female"
-													? "Female"
+													? "Nữ"
 													: value === "other"
-													? "Other"
+													? "Khác"
 													: ""
 											}
 											editable={false}
@@ -245,9 +242,9 @@ export default function SignUpPage1() {
 												<SelectDragIndicator />
 											</SelectDragIndicatorWrapper>
 											<SelectScrollView>
-												<SelectItem label="Male" value="male" />
-												<SelectItem label="Female" value="female" />
-												<SelectItem label="Other" value="other" />
+												<SelectItem label="Nam" value="male" />
+												<SelectItem label="Nữ" value="female" />
+												<SelectItem label="Khác" value="other" />
 											</SelectScrollView>
 										</SelectContent>
 									</SelectPortal>
@@ -262,11 +259,10 @@ export default function SignUpPage1() {
 							<FormControlErrorText>{form.formState.errors?.gender?.message}</FormControlErrorText>
 						</FormControlError>
 					</FormControl>
-
 					{/* Date of Birth */}
 					<FormControl isInvalid={!!form.formState.errors.dateOfBirth}>
 						<FormControlLabel>
-							<FormControlLabelText>Date of Birth</FormControlLabelText>
+							<FormControlLabelText>Ngày sinh</FormControlLabelText>
 						</FormControlLabel>
 						<Controller
 							defaultValue=""
@@ -302,11 +298,10 @@ export default function SignUpPage1() {
 							</FormControlErrorText>
 						</FormControlError>
 					</FormControl>
-
 					{/* Address */}
 					<FormControl isInvalid={!!form.formState.errors.address}>
 						<FormControlLabel>
-							<FormControlLabelText>Address</FormControlLabelText>
+							<FormControlLabelText>Địa chỉ</FormControlLabelText>
 						</FormControlLabel>
 						<Controller
 							defaultValue=""
@@ -316,7 +311,7 @@ export default function SignUpPage1() {
 								<TouchableOpacity onPress={() => setShowLocationPicker(true)}>
 									<Input pointerEvents="none">
 										<InputField
-											placeholder="Select your address"
+											placeholder="Chọn địa chỉ của bạn"
 											className="text-sm"
 											value={value}
 											editable={false}
@@ -342,19 +337,19 @@ export default function SignUpPage1() {
 				{/* Next Button */}
 				<VStack className="w-full" space="lg">
 					<Button className="w-full bg-red-500" onPress={form.handleSubmit(handleSubmit)}>
-						<ButtonText className="font-medium">Next</ButtonText>
+						<ButtonText className="font-medium">Tiếp theo</ButtonText>
 					</Button>
 				</VStack>
 
 				{/* Login Navigation Link */}
 				<HStack className="self-center" space="sm">
-					<Text size="md">Already have an account?</Text>
+					<Text size="md">Đã có tài khoản?</Text>
 					<Link href="/(auth)/sign-in">
 						<LinkText
 							className="font-medium text-primary-700 group-hover/link:text-primary-600 group-hover/pressed:text-primary-700"
 							size="md"
 						>
-							Login
+							Đăng nhập
 						</LinkText>
 					</Link>
 				</HStack>
