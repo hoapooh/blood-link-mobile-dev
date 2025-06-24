@@ -18,7 +18,10 @@ export interface IUserData {
 	};
 	firstName: string | null;
 	lastName: string | null;
+	gender: string | null;
 	phone: string | null;
+	dateOfBirth: string | null; // ISO format expected (e.g. "2025-06-10T00:00:00Z")
+	citizenId: string | null;
 	longitude: number | null;
 	latitude: number | null;
 	wardCode: string | null;
@@ -37,6 +40,7 @@ export interface IUserUpdate {
 	firstName?: string | null;
 	lastName?: string | null;
 	phone?: string | null;
+	citizenId?: string | null;
 	longitude?: string | null;
 	latitude?: string | null;
 	wardCode?: string | null;

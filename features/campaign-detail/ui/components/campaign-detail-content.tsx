@@ -65,9 +65,9 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
       text: "text-gray-600",
     },
   };
-
+  
   return (
-    <Card className="p-4 border border-outline-200 rounded-xl bg-white shadow-sm w-full px-6 py-4">
+    <Card className="border border-outline-200 rounded-xl bg-white shadow-sm w-full px-6 py-8">
       <VStack space="md">
         {/* Header */}
         <HStack className="justify-between items-start">

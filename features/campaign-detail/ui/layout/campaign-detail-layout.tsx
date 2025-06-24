@@ -5,7 +5,7 @@ import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import useGetCampaignById from "../../hooks/use-get-campaign-by-id";
 import BannerImage from "../components/BannerImage";
 import CampaignDetailSection from "../components/campaign-detail-content";
-import RegistrationForm from "../components/registration-form";
+import DonationRequestModal from "../components/registration-form";
 
 interface RegistrationData {
   firstName: string;
@@ -22,14 +22,12 @@ export default function CampaignDetail() {
     id as string
   );
   const [isFormOpen, setIsFormOpen] = useState(false);
-  // useEffect(() => {
-  //   if (campaign) {
-  //     console.log("Fetched campaign:", campaign);
-  //   }
-  // }, [campaign]);
-  const handleRegistration = () => setIsFormOpen(true);
-  const handleFormSubmit = (requestData: RegistrationData) => {
-    console.log("Registration form submitted:", requestData);
+  const handleRegistration = () => {
+  console.log("Registration button clicked");
+  setIsFormOpen(true);
+};
+  const handleFormSubmit = () => {
+    console.log("Registration form submitted:");
     setIsFormOpen(false);
   };
   const handleFormClose = () => setIsFormOpen(false);
@@ -70,12 +68,14 @@ export default function CampaignDetail() {
           enrolled={0}
           onRegisterClick={handleRegistration}
         />
-        <RegistrationForm
+        <DonationRequestModal
           isOpen={isFormOpen}
           onClose={handleFormClose}
-          onSubmit={handleFormSubmit}
+          campaign={campaign}
+          // onSubmit={handleFormSubmit}
         />
       </ScrollView>
+      
     </Box>
   );
 }
