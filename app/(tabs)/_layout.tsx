@@ -37,15 +37,23 @@ const TabsLayout = () => {
 			<Tabs.Screen
 				name="home"
 				options={{
-					title: "Home",
+					title: "Trang chủ",
 					headerShown: true,
 					tabBarIcon: ({ color }) => <Ionicons name="home" size={26} color={color} />,
 				}}
 			/>
 			<Tabs.Screen
+				name="blood-search"
+				options={{
+					title: "Thông tin máu",
+					headerShown: true,
+					tabBarIcon: ({ color }) => <Ionicons name="search" size={26} color={color} />,
+				}}
+			/>
+			<Tabs.Screen
 				name="request"
 				options={{
-					title: "Request",
+					title: "Yêu cầu",
 					headerShown: true,
 					tabBarIcon: ({ color }) => (
 						<MaterialCommunityIcons name="form-select" size={26} color={color} />
@@ -55,7 +63,7 @@ const TabsLayout = () => {
 			<Tabs.Screen
 				name="profile"
 				options={{
-					title: "Profile",
+					title: "Hồ sơ",
 					headerShown: true,
 					tabBarIcon: ({ color }) => <Ionicons name="water" size={26} color={color} />,
 				}}
