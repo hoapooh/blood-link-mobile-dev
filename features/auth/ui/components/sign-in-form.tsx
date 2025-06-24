@@ -38,9 +38,9 @@ const LoginForm = () => {
 	return (
 		<VStack className="max-w-[440px] w-full" space="md">
 			<VStack className="items-center" space="xs">
-				<Heading size="3xl">Log in</Heading>
+				<Heading size="3xl">Đăng nhập</Heading>
 				<Text size="xl">
-					Welcome to <Text></Text>
+					Chào mừng đến với <Text></Text>
 					<Text
 						size="xl"
 						bold
@@ -77,7 +77,7 @@ const LoginForm = () => {
 							render={({ field: { onChange, onBlur, value } }) => (
 								<Input>
 									<InputField
-										placeholder="Enter email"
+										placeholder="Nhập email"
 										value={value}
 										onChangeText={onChange}
 										onBlur={onBlur}
@@ -92,14 +92,13 @@ const LoginForm = () => {
 								as={() => <Feather name="alert-triangle" size={16} color={colors.red[700]} />}
 							/>
 							<FormControlErrorText>
-								{errors?.email?.message || "Email ID not found"}
+								{errors?.email?.message || "Không tìm thấy email"}
 							</FormControlErrorText>
 						</FormControlError>
 					</FormControl>
-
 					<FormControl isInvalid={!!errors.password} className="w-full">
 						<FormControlLabel>
-							<FormControlLabelText>Password</FormControlLabelText>
+							<FormControlLabelText>Mật khẩu</FormControlLabelText>
 						</FormControlLabel>
 						<Controller
 							defaultValue=""
@@ -119,7 +118,7 @@ const LoginForm = () => {
 								<Input>
 									<InputField
 										type={showPassword ? "text" : "password"}
-										placeholder="Enter password"
+										placeholder="Nhập mật khẩu"
 										value={value}
 										onChangeText={onChange}
 										onBlur={onBlur}
@@ -137,7 +136,7 @@ const LoginForm = () => {
 								as={() => <Feather name="alert-triangle" size={16} color={colors.red[700]} />}
 							/>
 							<FormControlErrorText>
-								{errors?.password?.message || "Password was incorrect"}
+								{errors?.password?.message || "Mật khẩu không đúng"}
 							</FormControlErrorText>
 						</FormControlError>
 					</FormControl>
@@ -149,28 +148,27 @@ const LoginForm = () => {
 						disabled={isSigningIn}
 					>
 						<ButtonText className="font-semibold">
-							{isSigningIn ? <Spinner size={"small"} color={colors.white} /> : "Log in"}
+							{isSigningIn ? <Spinner size={"small"} color={colors.white} /> : "Đăng nhập"}
 						</ButtonText>
 					</Button>
 				</VStack>
 				<HStack className="self-center" space="sm">
-					<Text size="md">Don&apos;t have an account?</Text>
+					<Text size="md">Chưa có tài khoản?</Text>
 					<Link href="/(auth)/sign-up">
 						<LinkText
 							className="font-medium text-primary-700 group-hover/link:text-primary-600  group-hover/pressed:text-primary-700"
 							size="md"
 						>
-							Sign up
+							Đăng ký
 						</LinkText>
 					</Link>
 				</HStack>
 			</VStack>
-
 			{clerkErrors && clerkErrors.length > 0 && (
 				<VStack space="sm" className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
 					<HStack space="sm" className="items-center">
 						<Feather name="alert-circle" size={20} color="#dc2626" />
-						<Text className="text-red-700 font-semibold text-base">Authentication Error</Text>
+						<Text className="text-red-700 font-semibold text-base">Lỗi xác thực</Text>
 					</HStack>
 					<VStack space="xs">
 						{clerkErrors.map((error, index) => (

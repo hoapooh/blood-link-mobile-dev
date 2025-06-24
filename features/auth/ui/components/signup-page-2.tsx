@@ -70,21 +70,20 @@ export default function SignUpPage2() {
 	return (
 		<VStack className="max-w-[440px] w-full" space="md">
 			<VStack className="items-center" space="xs">
-				<Heading size="3xl">Sign up</Heading>
+				<Heading size="3xl">Đăng ký</Heading>
 				<Text bold size="lg">
-					Contact Information (2/2)
+					Thông tin liên hệ (2/2)
 				</Text>
 				<Text size="sm" className="text-gray-600">
-					Please provide your contact details
+					Vui lòng cung cấp thông tin liên hệ của bạn
 				</Text>
 			</VStack>
-
 			<VStack className="w-full" space="2xl">
 				<VStack space="xl" className="w-full">
 					{/* Phone */}
 					<FormControl isInvalid={!!form.formState.errors.phone}>
 						<FormControlLabel>
-							<FormControlLabelText>Phone Number</FormControlLabelText>
+							<FormControlLabelText>Số điện thoại</FormControlLabelText>
 						</FormControlLabel>
 						<Controller
 							defaultValue=""
@@ -93,7 +92,7 @@ export default function SignUpPage2() {
 							render={({ field: { onChange, onBlur, value } }) => (
 								<Input>
 									<InputField
-										placeholder="Enter your phone number"
+										placeholder="Nhập số điện thoại"
 										className="text-sm"
 										value={value}
 										onChangeText={onChange}
@@ -152,7 +151,7 @@ export default function SignUpPage2() {
 					{/* Password */}
 					<FormControl isInvalid={!!form.formState.errors.password}>
 						<FormControlLabel>
-							<FormControlLabelText>Password</FormControlLabelText>
+							<FormControlLabelText>Mật khẩu</FormControlLabelText>
 						</FormControlLabel>
 						<Controller
 							defaultValue=""
@@ -162,7 +161,7 @@ export default function SignUpPage2() {
 								<Input>
 									<InputField
 										className="text-sm"
-										placeholder="Password"
+										placeholder="Mật khẩu"
 										value={value}
 										onChangeText={onChange}
 										onBlur={onBlur}
@@ -187,7 +186,6 @@ export default function SignUpPage2() {
 						</FormControlError>
 					</FormControl>
 				</VStack>
-
 				{/* Navigation Buttons */}
 				<VStack className="w-full" space="lg">
 					<Button
@@ -196,34 +194,32 @@ export default function SignUpPage2() {
 						isDisabled={isSigningUp}
 					>
 						<ButtonText className="font-medium">
-							{isSigningUp ? <Spinner size={"small"} color={colors.white} /> : "Sign up"}
+							{isSigningUp ? <Spinner size={"small"} color={colors.white} /> : "Đăng ký"}
 						</ButtonText>
 					</Button>
 
 					<Button className="w-full" variant="outline" onPress={handleGoBack}>
-						<ButtonText className="font-medium">Back</ButtonText>
+						<ButtonText className="font-medium">Quay lại</ButtonText>
 					</Button>
 				</VStack>
-
 				{/* Login Navigation Link */}
 				<HStack className="self-center" space="sm">
-					<Text size="md">Already have an account?</Text>
+					<Text size="md">Đã có tài khoản?</Text>
 					<Link href="/(auth)/sign-in">
 						<LinkText
 							className="font-medium text-primary-700 group-hover/link:text-primary-600 group-hover/pressed:text-primary-700"
 							size="md"
 						>
-							Login
+							Đăng nhập
 						</LinkText>
 					</Link>
 				</HStack>
 			</VStack>
-
 			{clerkErrors && clerkErrors.length > 0 && (
 				<VStack space="sm" className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
 					<HStack space="sm" className="items-center">
 						<Feather name="alert-circle" size={20} color="#dc2626" />
-						<Text className="text-red-700 font-semibold text-base">Authentication Error</Text>
+						<Text className="text-red-700 font-semibold text-base">Lỗi xác thực</Text>
 					</HStack>
 					<VStack space="xs">
 						{clerkErrors.map((error, index) => (
