@@ -24,24 +24,25 @@ import { useAuthStore } from "@/store/slice/auth/auth-store";
 import dayjs from "dayjs";
 import { X } from "lucide-react-native";
 import React, { useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+import useCreateDonationRequest from "../../hooks/use-create-request";
 
 interface DonationRequestModalProps {
   isOpen: boolean;
   onClose: () => void;
   campaign: ICampaignData;
-  onSubmit?: () => void;
 }
 
 const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
   isOpen,
   onClose,
-  campaign,
-  onSubmit,
+  campaign
 }) => {
   const { user: authUser } = useAuthStore();
   const { user } = useGetProfile();
   const [agree, setAgree] = useState(false);
-
+  const { createRequest, isLoading } = useCreateDonationRequest();
+  
   const getFullAddress = () => {
     const parts = [
       authUser?.data?.wardName,
@@ -51,6 +52,27 @@ const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
     return parts.length > 0 ? parts.join(", ") : "-";
   };
 
+const handleSubmit = async () => {
+  if (!campaign?.id) return;
+
+  try {
+    await createRequest({
+      campaignId: campaign.id
+    });
+    console.log("Request sent successfully");
+    onClose();
+  } catch (error) {
+    console.error("Error sending request:", error);
+  }
+};
+
+  if (isLoading) {
+      return (
+        <View className="px-6 py-8">
+          <ActivityIndicator size="large" color="#ef4444" />
+        </View>
+      );
+    }
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg" className="my-10 rounded-xl max-h-[95vh] overflow-y-auto pt-10 pb-10" >
       <ModalBackdrop />
@@ -214,7 +236,7 @@ const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
               variant="solid"
               action="primary"
               className="flex-1 bg-red-500"
-              onPress={onSubmit}
+              onPress={handleSubmit}
               isDisabled={!agree}
             >
               <ButtonText className="text-white">Gửi</ButtonText>

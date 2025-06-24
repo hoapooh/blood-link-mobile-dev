@@ -15,5 +15,10 @@ export interface IDonationRequestData {
     campaign: ICampaignData | null;
     currentStatus: RequestStatus | null;
 }
+export interface ICreateDonationRequestPayload {
+  campaignId: string;
+  // appointmentDate: string;
+  // note: string;
+}
 export type IDonationRequest = IBase<IDonationRequestData>;
 export type IDonationRequestHistory = IBase<IDonationRequestData[]>;
