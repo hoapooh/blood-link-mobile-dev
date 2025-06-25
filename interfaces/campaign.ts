@@ -16,7 +16,8 @@ export interface ICampaignData {
 	status: CampaignStatus ; // Use the enum
 	banner: string;
 	location: string;
-	limitDonation: number,
+	limitDonation: number;
+	bloodCollectionDate: string; // ISO format expected (e.g. "2025-06-10T00:00:00Z")
 	createdAt: string | null;
 	updatedAt: string | null;
 }
