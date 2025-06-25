@@ -13,6 +13,7 @@ interface BloodSearchFormProps {
 	onRhSelect: (rh: BloodRh) => void;
 	onComponentSelect: (component: BloodTypeComponent) => void;
 	onSearch: () => void;
+	onReset?: () => void;
 }
 
 const BloodSearchForm: React.FC<BloodSearchFormProps> = ({
@@ -23,6 +24,7 @@ const BloodSearchForm: React.FC<BloodSearchFormProps> = ({
 	onRhSelect,
 	onComponentSelect,
 	onSearch,
+	onReset,
 }) => {
 	const bloodGroups = [BloodGroup.A, BloodGroup.B, BloodGroup.AB, BloodGroup.O];
 	const rhFactors = [BloodRh.POSITIVE, BloodRh.NEGATIVE];
@@ -41,12 +43,20 @@ const BloodSearchForm: React.FC<BloodSearchFormProps> = ({
 
 			{/* Blood Group Selection */}
 			<VStack space="sm">
-				<Text className="text-lg font-semibold">Chọn nhóm máu:</Text>
+				<HStack className="justify-between items-center">
+					<Text className="text-lg font-semibold">Chọn nhóm máu:</Text>
+					{/* {selectedGroup && onReset && (
+						<Button variant="outline" size="sm" onPress={onReset}>
+							<ButtonText className="text-sm">Chọn lại</ButtonText>
+						</Button>
+					)} */}
+				</HStack>
 				<HStack space="sm" className="flex-wrap">
 					{bloodGroups.map((group) => (
 						<Button
 							key={group}
 							variant={selectedGroup === group ? "solid" : "outline"}
+							disabled={selectedGroup !== null && selectedGroup !== group}
 							onPress={() => onGroupSelect(group)}
 							className="flex-1 min-w-16"
 						>

@@ -14,7 +14,7 @@ export const bloodInfoApi = {
 		try {
 			const response = await axiosInstance.get("/blood-info");
 
-			return response.data.data;
+			return response.data;
 		} catch (error) {
 			if (isAxiosError(error)) {
 				throw new Error(error.response?.data?.message || "Failed to get blood info");
@@ -26,7 +26,7 @@ export const bloodInfoApi = {
 		try {
 			const response = await axiosInstance.get(`/blood-info/${path.group}/${path.rh}`);
 
-			return response.data.data;
+			return response.data;
 		} catch (error) {
 			if (isAxiosError(error)) {
 				throw new Error(error.response?.data?.message || "Failed to get blood info");
