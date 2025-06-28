@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
@@ -6,6 +7,7 @@ interface ProfileActionsProps {
 }
 
 const ProfileActions: React.FC<ProfileActionsProps> = ({ onSignOut }) => {
+	const router = useRouter();
 	const ActionButton = ({
 		title,
 		onPress,
@@ -31,10 +33,9 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({ onSignOut }) => {
 
 			<View className="space-y-3">
 				<ActionButton
-					title="Chỉnh sửa hồ sơ"
+					title="Xem lịch sử đăng ký hiến máu"
 					onPress={() => {
-						// TODO: Navigate to edit profile screen
-						console.log("Edit profile pressed");
+						router.push("/(request)");
 					}}
 				/>
 
