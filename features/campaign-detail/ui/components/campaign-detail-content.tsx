@@ -1,4 +1,3 @@
-
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -39,11 +38,13 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
     endDate,
     location,
     limitDonation,
+    bloodCollectionDate,
     status,
   } = campaign;
 
   const start = dayjs(startDate);
   const end = dayjs(endDate);
+  const collectionDate = dayjs(bloodCollectionDate);
   const now = dayjs();
 
   let derivedStatus: CampaignStatus = status;
@@ -65,7 +66,7 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
       text: "text-gray-600",
     },
   };
-  
+
   return (
     <Card className="border border-outline-200 rounded-xl bg-white shadow-sm w-full px-6 py-8">
       <VStack space="md">
@@ -98,7 +99,8 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
         <HStack className="items-center" space="sm">
           <Icon as={CalendarDaysIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-700">
-            {start.format("D/MM/YYYY")} → {end.format("D/MM/YYYY")}
+            {/* {start.format("D/MM/YYYY")} → {end.format("D/MM/YYYY")} */}
+            {collectionDate.format("DD/MM/YYYY")}
           </Text>
         </HStack>
 
@@ -115,7 +117,13 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
             {enrolled} / {limitDonation} người tham gia
           </Text>
         </HStack>
-         {/* Attention Section */}
+        {/* Registration End Date */}
+        <VStack space="xs">
+          <Text className="text-sm font-medium text-gray-700">
+            Thời gian kết thúc đăng ký: {end.format("DD/MM/YYYY")}
+          </Text>
+        </VStack>
+        {/* Attention Section */}
         <VStack
           className="border border-yellow-300 bg-yellow-100 rounded-md p-4"
           space="sm"
@@ -134,7 +142,8 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
               - Tránh uống rượu bia ít nhất 24 giờ trước khi hiến máu.
             </Text>
             <Text className="text-sm text-yellow-800">
-              - Nếu bạn đang dùng thuốc hoặc có bệnh lý, hãy hỏi ý kiến bác sĩ trước.
+              - Nếu bạn đang dùng thuốc hoặc có bệnh lý, hãy hỏi ý kiến bác sĩ
+              trước.
             </Text>
           </VStack>
         </VStack>
@@ -146,9 +155,11 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
         >
           <HStack className="items-center mb-3 space-x-2">
             <Icon as={Heart} size="md" className="text-red-600 mr-2" />
-            <Text className="text-lg font-semibold text-red-700">Lợi ích khi tham gia</Text>
+            <Text className="text-lg font-semibold text-red-700">
+              Lợi ích khi tham gia
+            </Text>
           </HStack>
-          <VStack space="xs" >
+          <VStack space="xs">
             <HStack space="sm" className="items-center">
               <Icon as={CheckCircle2} size="sm" className="text-red-500" />
               <Text className="text-base text-typography-700">
@@ -187,11 +198,15 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
           </HStack>
           <HStack space="sm" className="items-center">
             <Icon as={Phone} size="sm" className="text-red-500" />
-            <Text className="text-base text-typography-700">+84 123 456 789</Text>
+            <Text className="text-base text-typography-700">
+              +84 123 456 789
+            </Text>
           </HStack>
           <HStack space="sm" className="items-center">
             <Icon as={Mail} size="sm" className="text-red-500" />
-            <Text className="text-base text-typography-700">support@lifeblood.org</Text>
+            <Text className="text-base text-typography-700">
+              support@lifeblood.org
+            </Text>
           </HStack>
         </VStack>
         {/* Register Button */}
@@ -200,8 +215,7 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
           action="primary"
           className="bg-red-500 mt-2"
           isDisabled={
-            derivedStatus === CampaignStatus.ended ||
-            enrolled >= limitDonation
+            derivedStatus === CampaignStatus.ended || enrolled >= limitDonation
           }
           onPress={onRegisterClick}
         >

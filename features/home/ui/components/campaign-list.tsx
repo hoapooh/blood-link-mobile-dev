@@ -58,6 +58,7 @@ const CampaignList = () => {
             updatedAt={item.updatedAt}
             location={item.location}
             limitDonation={item.limitDonation}
+            bloodCollectionDate={item.bloodCollectionDate}
             enrolled={0}
             onRequest={() => handleViewDetails(item.id)}
           />

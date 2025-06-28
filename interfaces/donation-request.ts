@@ -4,9 +4,13 @@ import { IUserData } from "./user";
 
 export enum RequestStatus {
   pending = "pending",
+  approved = "approved",
   completed = "completed",
   rejected = "rejected",
+  canceled = "canceled",
+  failed = "failed",
 }
+
 export interface IDonationRequestData {
     id: string | null;
     createdAt: string | null;

@@ -11,7 +11,7 @@ import {
   CalendarDaysIcon,
   ClockIcon,
   MapPin,
-  UsersIcon,
+  UsersIcon
 } from "lucide-react-native";
 import React from "react";
 import { Image } from "react-native";
@@ -30,11 +30,13 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
   banner,
   location,
   limitDonation,
+  bloodCollectionDate,
   onRequest,
   enrolled = 0,
 }) => {
   const start = dayjs(startDate);
   const end = dayjs(endDate);
+  const collectionDate = dayjs(bloodCollectionDate);
 
   const statusColors: Record<CampaignStatus, { bg: string; text: string }> = {
     [CampaignStatus.not_started]: {
@@ -85,12 +87,14 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
             {location || "Location not specified"}
           </Text>
         </HStack>
+        
 
         {/* Date */}
         <HStack className="items-center" space="sm">
           <Icon as={CalendarDaysIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-600">
-            {start.format("D/MM/YYYY")} → {end.format("D/MM/YYYY")}
+            {/* {start.format("D/MM/YYYY")} → {end.format("D/MM/YYYY")} */}
+            {collectionDate.format("DD/MM/YYYY")}
           </Text>
         </HStack>
 
@@ -110,7 +114,12 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
             {enrolled} / {limitDonation} người tham gia
           </Text>
         </HStack>
-
+        {/* Registration End Date */}
+        <VStack space="xs">
+            <Text className="text-sm font-medium text-gray-700">
+              Thời gian kết thúc đăng ký: {end.format("DD/MM/YYYY")}
+            </Text>
+        </VStack>
         {/* Action Button */}
         <Button
           variant="solid"
