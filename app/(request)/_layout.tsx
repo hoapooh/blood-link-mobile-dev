@@ -1,4 +1,5 @@
 // (request)/_layout.tsx
+import { CustomHeader } from "@/components/ui/custom-header";
 import { Stack } from "expo-router";
 
 export default function RequestRoutesLayout() {
@@ -6,6 +7,7 @@ export default function RequestRoutesLayout() {
     <Stack
       screenOptions={{
         headerShown: true,
+        header: ({ options }) => <CustomHeader title={options.title || ""} />,
       }}
     >
       <Stack.Screen

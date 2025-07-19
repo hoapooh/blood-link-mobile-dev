@@ -56,11 +56,26 @@ const MyRequests = () => {
 	const formatDate = (dateString: string | null) => {
 		if (!dateString) return "Not scheduled";
 		const date = new Date(dateString);
-		return date.toLocaleDateString("en-US", {
+		return date.toLocaleDateString("vi-VN", {
 			year: "numeric",
-			month: "short",
+			month: "numeric",
 			day: "numeric",
 		});
+	};
+
+	const getBloodTypeComponentDisplay = (component: string) => {
+		switch (component) {
+			case "whole_blood":
+				return "Máu toàn phần";
+			case "plasma":
+				return "Huyết tương";
+			case "red_cells":
+				return "Hồng cầu";
+			case "platelets":
+				return "Tiểu cầu";
+			default:
+				return component.replace(/_/g, ' ');
+		}
 	};
 
 	const getBloodTypeDisplay = (bloodType: IBloodType) => {
@@ -70,21 +85,13 @@ const MyRequests = () => {
 		return "N/A";
 	};
 
-	const getUrgencyLevel = (startDate: string) => {
-		const now = new Date();
-		const start = new Date(startDate);
-		const hoursFromStart = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
-		
-		if (hoursFromStart <= 6) return { level: "critical", color: "text-red-600", bgColor: "bg-red-50" };
-		if (hoursFromStart <= 24) return { level: "urgent", color: "text-orange-600", bgColor: "bg-orange-50" };
-		return { level: "normal", color: "text-green-600", bgColor: "bg-green-50" };
-	};
+	
 
 	if (isLoading) {
 		return (
 			<View className="flex-1 items-center justify-center py-8">
 				<ActivityIndicator size="large" color="#ef4444" />
-				<Text className="text-typography-600 mt-4">Loading emergency requests...</Text>
+				<Text className="text-typography-600 mt-4">Đang tải yêu cầu khẩn cấp...</Text>
 			</View>
 		);
 	}
@@ -95,13 +102,13 @@ const MyRequests = () => {
 				<Text className="text-red-500 text-center mb-4">
 					{error instanceof Error
 						? error.message
-						: "Unable to load emergency requests"}
+						: "Không thể tải yêu cầu khẩn cấp"}
 				</Text>
 				<TouchableOpacity
 					onPress={() => refetch()}
 					className="bg-red-500 px-6 py-3 rounded-lg"
 				>
-					<Text className="text-white font-semibold">Try Again</Text>
+					<Text className="text-white font-semibold">Thử lại</Text>
 				</TouchableOpacity>
 			</View>
 		);
@@ -109,11 +116,11 @@ const MyRequests = () => {
 
 	return (
 		<VStack className="p-4" space="xl">
-			<Text className="text-lg font-semibold text-typography-900 mb-2">My Emergency Requests</Text>
+			<Text className="text-lg font-semibold text-typography-900 mb-2">Yêu cầu khẩn cấp của tôi</Text>
 			{emergencyRequests.map((request) => {
 				const statusInfo = getStatusInfo(request.status);
 				const bloodTypeDisplay = getBloodTypeDisplay(request.bloodType);
-				const urgencyInfo = getUrgencyLevel(request.startDate);
+				const bloodTypeComponentDisplay = getBloodTypeComponentDisplay(request.bloodTypeComponent);
 
 				return (
 					<Card
@@ -121,15 +128,6 @@ const MyRequests = () => {
 						className="p-4 border border-outline-200 rounded-xl bg-white shadow-sm"
 					>
 						<VStack space="md">
-							{/* Urgency indicator for pending requests */}
-							{request.status === "pending" && urgencyInfo.level !== "normal" && (
-								<HStack className={`items-center space-x-2 p-2 rounded-lg ${urgencyInfo.bgColor}`}>
-									<Icon as={AlertTriangle} size="sm" className={urgencyInfo.color} />
-									<Text className={`text-sm font-medium ${urgencyInfo.color} capitalize`}>
-										{urgencyInfo.level} - Time sensitive request
-									</Text>
-								</HStack>
-							)}
 
 							{/* Header with blood type and status */}
 							<HStack className="justify-between items-center">
@@ -138,11 +136,11 @@ const MyRequests = () => {
 										<Text className="text-red-600 font-bold text-lg">{bloodTypeDisplay}</Text>
 									</VStack>
 									<VStack>
-										<Text className="font-semibold text-typography-900 capitalize">
-											{request.bloodTypeComponent.replace(/_/g, ' ')}
+										<Text className="font-semibold text-typography-900">
+											{bloodTypeComponentDisplay}
 										</Text>
 										<Text className="text-sm text-typography-600">
-											{request.requiredVolume}ml required
+											Cần {request.requiredVolume}ml
 										</Text>
 									</VStack>
 								</HStack>
@@ -150,7 +148,9 @@ const MyRequests = () => {
 								<VStack className="items-end">
 									<Badge className={`${statusInfo.color} px-3 py-1 rounded-full mb-1`}>
 										<BadgeText className="text-white font-medium text-xs capitalize">
-											{request.status}
+											{request.status === "pending" ? "Đang chờ" : 
+											 request.status === "approved" ? "Đã duyệt" : 
+											 request.status === "rejected" ? "Bị từ chối" : request.status}
 										</BadgeText>
 									</Badge>
 									<Icon as={statusInfo.icon} size="sm" className={statusInfo.iconColor} />
@@ -162,7 +162,7 @@ const MyRequests = () => {
 								<HStack className="items-center" space="sm">
 									<Icon as={CalendarDaysIcon} size="sm" className="text-typography-500" />
 									<Text className="text-sm text-typography-600">
-										Started: {formatDate(request.startDate)}
+										Ngày gửi yêu cầu: {formatDate(request.startDate)}
 									</Text>
 								</HStack>
 							</VStack>
@@ -170,7 +170,7 @@ const MyRequests = () => {
 							{/* Description */}
 							{request.description && (
 								<VStack className="bg-background-50 p-3 rounded-lg">
-									<Text className="text-sm font-medium text-typography-700 mb-1">Description:</Text>
+									<Text className="text-sm font-medium text-typography-700 mb-1">Mô tả:</Text>
 									<Text className="text-sm text-typography-600">
 										{request.description}
 									</Text>
@@ -180,7 +180,7 @@ const MyRequests = () => {
 							{/* Rejection reason */}
 							{request.rejectionReason && request.status === "rejected" && (
 								<VStack className="bg-error-50 p-3 rounded-lg">
-									<Text className="text-sm font-medium text-error-700 mb-1">Rejection Reason:</Text>
+									<Text className="text-sm font-medium text-error-700 mb-1">Lý do từ chối:</Text>
 									<Text className="text-sm text-error-600">
 										{request.rejectionReason}
 									</Text>
@@ -199,7 +199,7 @@ const MyRequests = () => {
 											console.log("Viewing details for request:", request.id);
 										}}
 									>
-										<ButtonText>View Details</ButtonText>
+										<ButtonText>Xem chi tiết</ButtonText>
 									</Button>
 								</HStack>
 							)}
@@ -215,7 +215,7 @@ const MyRequests = () => {
 											console.log("Viewing collection details for request:", request.id);
 										}}
 									>
-										<ButtonText className="text-white">View Collection Details</ButtonText>
+										<ButtonText className="text-white">Xem chi tiết thu thập</ButtonText>
 									</Button>
 								</VStack>
 							)}
@@ -230,7 +230,7 @@ const MyRequests = () => {
 										console.log("Creating new request similar to:", request.id);
 									}}
 								>
-									<ButtonText>Create New Request</ButtonText>
+									<ButtonText>Tạo yêu cầu mới</ButtonText>
 								</Button>
 							)}
 						</VStack>
@@ -244,9 +244,9 @@ const MyRequests = () => {
 					<VStack className="bg-red-50 p-6 rounded-full">
 						<Icon as={AlertTriangle} size="xl" className="text-red-400" />
 					</VStack>
-					<Text className="text-lg font-medium text-typography-600">No emergency requests found</Text>
+					<Text className="text-lg font-medium text-typography-600">Không tìm thấy yêu cầu khẩn cấp</Text>
 					<Text className="text-sm text-typography-500 text-center max-w-xs">
-						Your emergency blood requests will appear here. Create a new request if you need urgent blood assistance.
+						Các yêu cầu máu khẩn cấp của bạn sẽ xuất hiện ở đây. Tạo yêu cầu mới nếu bạn cần hỗ trợ máu khẩn cấp.
 					</Text>
 					<Button 
 						variant="outline" 
@@ -257,7 +257,7 @@ const MyRequests = () => {
 							console.log("Navigate to create emergency request");
 						}}
 					>
-						<ButtonText>Create Emergency Request</ButtonText>
+						<ButtonText>Tạo yêu cầu khẩn cấp</ButtonText>
 					</Button>
 				</VStack>
 			)}

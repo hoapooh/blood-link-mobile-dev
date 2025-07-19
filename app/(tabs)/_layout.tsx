@@ -1,4 +1,4 @@
-import { SignOutButton } from "@/features/auth/ui/components/sign-out-button";
+import { CustomHeader } from "@/components/ui/custom-header";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
@@ -18,20 +18,15 @@ const TabsLayout = () => {
 					backgroundColor: "#fffafa",
 				},
 				headerStyle: {
-					backgroundColor: "#fffafa",
+					backgroundColor: "#ef4444",
 					elevation: 0,
 					shadowOpacity: 0,
 					borderBottomWidth: 0,
 				},
-				headerTitleStyle: {
-					fontWeight: "bold",
-				},
-				headerTintColor: "#ef4444",
+				header: ({ options }) => <CustomHeader title={options.title || ""} />,
 				tabBarActiveTintColor: "#ef4444",
 				tabBarInactiveTintColor: "#6b7280",
 				headerShadowVisible: false,
-				headerTitleAlign: "center",
-				headerRight: () => <SignOutButton />,
 			}}
 		>
 			<Tabs.Screen

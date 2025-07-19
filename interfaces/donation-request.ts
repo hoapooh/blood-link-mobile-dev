@@ -4,11 +4,14 @@ import { IUserData } from "./user";
 
 export enum RequestStatus {
   pending = "pending",
-  approved = "approved",
   completed = "completed",
   rejected = "rejected",
-  canceled = "canceled",
-  failed = "failed",
+  result_returned = "result_returned",
+  appointment_confirmed = "appointment_confirmed",
+  appointment_cancelled = "appointment_cancelled",
+  appointment_absent = "appointment_absent",
+  customer_cancelled = "customer_cancelled",
+  customer_checked_in = "customer_checked_in",
 }
 
 export interface IDonationRequestData {

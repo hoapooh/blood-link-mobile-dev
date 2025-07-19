@@ -26,10 +26,6 @@ export default function CampaignDetail() {
   console.log("Registration button clicked");
   setIsFormOpen(true);
 };
-  const handleFormSubmit = () => {
-    console.log("Registration form submitted:");
-    setIsFormOpen(false);
-  };
   const handleFormClose = () => setIsFormOpen(false);
 
   if (isLoading) {
@@ -72,7 +68,6 @@ export default function CampaignDetail() {
           isOpen={isFormOpen}
           onClose={handleFormClose}
           campaign={campaign}
-          // onSubmit={handleFormSubmit}
         />
       </ScrollView>
       

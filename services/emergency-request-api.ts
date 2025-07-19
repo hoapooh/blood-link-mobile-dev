@@ -1,5 +1,6 @@
 import axiosInstance from "@/config/axios-instance";
-import { IEmergencyRequestList } from "@/interfaces/emergency-request";
+import { CreateEmergencyRequestDto } from "@/interfaces/create-emergency-request";
+import { IEmergencyRequestData, IEmergencyRequestList } from "@/interfaces/emergency-request";
 import { isAxiosError } from "axios";
 
 export const emergencyRequestApi = {
@@ -15,6 +16,22 @@ export const emergencyRequestApi = {
       if (isAxiosError(error)) {
         throw new Error(
           error.response?.data?.message || "Failed to get emergency requests"
+        );
+      }
+      throw error;
+    }
+  },
+
+  createEmergencyRequest: async (
+    requestData: CreateEmergencyRequestDto
+  ): Promise<IEmergencyRequestData> => {
+    try {
+      const response = await axiosInstance.post("/emergency-requests", requestData);
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message || "Failed to create emergency request"
         );
       }
       throw error;

@@ -53,6 +53,19 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
     },
   };
 
+  const getStatusDisplay = (status: CampaignStatus): string => {
+    switch (status) {
+      case CampaignStatus.not_started:
+        return "Chưa bắt đầu";
+      case CampaignStatus.active:
+        return "Đang diễn ra";
+      case CampaignStatus.ended:
+        return "Đã kết thúc";
+      default:
+        return status;
+    }
+  };
+
   return (
     <Card className="p-0 border border-outline-200 rounded-xl bg-white shadow-sm overflow-hidden">
       {/* Banner */}
@@ -75,7 +88,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
             <BadgeText
               className={`${statusColors[status].text} text-xs font-medium`}
             >
-              {status}
+              {getStatusDisplay(status)}
             </BadgeText>
           </Badge>
         </HStack>
