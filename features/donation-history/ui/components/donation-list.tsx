@@ -14,7 +14,7 @@ const DonationList = () => {
 
   const handleViewDetails = (id: string | null) => {
     if (id) {
-      router.push({ pathname: "/[id]", params: { id } });
+      router.push({ pathname: "/(donation)/[id]", params: { id } });
     }
   };
 

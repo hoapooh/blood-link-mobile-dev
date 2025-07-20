@@ -1,34 +1,34 @@
 import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
-	FormControl,
-	FormControlError,
-	FormControlErrorText,
-	FormControlLabel,
-	FormControlLabelText,
+  FormControl,
+  FormControlError,
+  FormControlErrorText,
+  FormControlLabel,
+  FormControlLabelText,
 } from "@/components/ui/form-control";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 import {
-	Modal,
-	ModalBackdrop,
-	ModalBody,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
+  Modal,
+  ModalBackdrop,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
 } from "@/components/ui/modal";
 import {
-	Select,
-	SelectBackdrop,
-	SelectContent,
-	SelectDragIndicator,
-	SelectDragIndicatorWrapper,
-	SelectIcon,
-	SelectInput,
-	SelectItem,
-	SelectPortal,
-	SelectTrigger,
+  Select,
+  SelectBackdrop,
+  SelectContent,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectIcon,
+  SelectInput,
+  SelectItem,
+  SelectPortal,
+  SelectTrigger,
 } from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
@@ -383,7 +383,7 @@ const BloodRequestForm: React.FC<BloodRequestFormProps> = ({
                     variant="default"
                   >
                     <TextareaInput
-                      placeholder="Mô tả mức độ khẩn cấp, tình trạng y tế hoặc bất kỳ thông tin bổ sung nào..."
+                      placeholder="Mô tả mức độ khẩn cấp, tình trạng bệnh nhân hoặc bất kỳ thông tin bổ sung nào..."
                       value={formData.description}
                       onChangeText={(value) =>
                         handleInputChange("description", value)

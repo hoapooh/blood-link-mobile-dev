@@ -5,6 +5,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import useGetCampaignById from "@/features/campaign-detail/hooks/use-get-campaign-by-id";
 import { CampaignStatus, ICampaignData } from "@/interfaces/campaign";
 import dayjs from "dayjs";
 import {
@@ -18,10 +19,10 @@ import { Image } from "react-native";
 
 interface CampaignCardProps extends ICampaignData {
   onRequest?: () => void;
-  enrolled?: number;
 }
 
 const CampaignCard: React.FC<CampaignCardProps> = ({
+  id,
   name,
   description,
   startDate,
@@ -32,11 +33,18 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
   limitDonation,
   bloodCollectionDate,
   onRequest,
-  enrolled = 0,
 }) => {
-  const start = dayjs(startDate);
+  // Fetch campaign details to get statistics
+  const { campaign, isLoading: isLoadingStats } = useGetCampaignById(id);
+  
   const end = dayjs(endDate);
   const collectionDate = dayjs(bloodCollectionDate);
+  
+  // Get total registrations from campaign statistics
+  const totalRegistrations = campaign?.statistics?.totalDonations || 0;
+  
+  // Show loading state for registration count if still fetching
+  const registrationDisplay = isLoadingStats ? "..." : totalRegistrations;
 
   const statusColors: Record<CampaignStatus, { bg: string; text: string }> = {
     [CampaignStatus.not_started]: {
@@ -124,7 +132,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
         <HStack className="items-center" space="sm">
           <Icon as={UsersIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-600">
-            {enrolled} / {limitDonation} người tham gia
+            {registrationDisplay} / {limitDonation} người tham gia
           </Text>
         </HStack>
         {/* Registration End Date */}

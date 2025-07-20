@@ -1,8 +1,8 @@
 import axiosInstance from "@/config/axios-instance";
 import {
-	ICreateDonationRequestPayload,
-	IDonationRequest,
-	IDonationRequestHistory,
+  ICreateDonationRequestPayload,
+  IDonationRequest,
+  IDonationRequestHistory,
 } from "@/interfaces/donation-request";
 import { isAxiosError } from "axios";
 
@@ -49,7 +49,7 @@ export const donationApi = {
   ): Promise<IDonationRequest> => {
     try {
       const response = await axiosInstance.get(
-        `//donations/my-requests/${donationId}`
+        `/donations/my-requests/${donationId}`
       );
       return response.data;
     } catch (error) {

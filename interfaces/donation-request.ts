@@ -21,6 +21,7 @@ export interface IDonationRequestData {
     donor: IUserData | null;
     campaign: ICampaignData | null;
     currentStatus: RequestStatus | null;
+    appointmentDate: string | null;
 }
 export interface ICreateDonationRequestPayload {
   campaignId: string;

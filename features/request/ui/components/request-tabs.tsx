@@ -29,7 +29,7 @@ const RequestTabs = () => {
 							activeTab === "emergency" ? "text-red-600" : "text-typography-600"
 						}`}
 					>
-						Emergency
+						Yêu cầu khẩn cấp
 					</ButtonText>
 				</Button>
 
@@ -49,7 +49,7 @@ const RequestTabs = () => {
 							activeTab === "history" ? "text-red-600" : "text-typography-600"
 						}`}
 					>
-						My Requests
+						Lịch sử yêu cầu
 					</ButtonText>
 				</Button>
 			</HStack>
