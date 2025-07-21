@@ -1,8 +1,9 @@
+import { Link } from "expo-router";
+import { Text, View } from "react-native";
+
 import HomePage from "@/features/home/ui/layout/home-page";
 import { SignedOut, useUser } from "@clerk/clerk-expo";
-import { Link } from "expo-router";
-import React from "react";
-import { Text, View } from "react-native";
+
 const Index = () => {
 	const { user } = useUser();
 
@@ -23,7 +24,7 @@ const Index = () => {
 					<Text>Sign up</Text>
 				</Link>
 			</SignedOut>
-			<HomePage/>
+			<HomePage />
 			{/* <CampaignDetail/> */}
 		</View>
 	);

@@ -33,8 +33,6 @@ export interface IUserData {
 	status: string | null;
 }
 
-export type IUser = IBase<IUserData>;
-
 // PATCH
 export interface IUserUpdate {
 	firstName?: string | null;
@@ -52,3 +50,18 @@ export interface IUserUpdate {
 	bloodGroup?: BloodGroup | null;
 	bloodRh?: BloodRh | null;
 }
+
+// GET
+export interface IUserFindNearByParams {
+	radius: number;
+	bloodRh: BloodRh;
+	bloodGroup: BloodGroup;
+}
+
+export interface IUserFindNearByData {
+	customers: IUserData[];
+}
+
+// Types Export
+export type IUser = IBase<IUserData>;
+export type IUserFindNearBy = IBase<IUserFindNearByData>;

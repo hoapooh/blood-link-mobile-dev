@@ -1,7 +1,11 @@
-import { SignOutButton } from "@/features/auth/ui/components/sign-out-button";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import React from "react";
+
+import { SignOutButton } from "@/features/auth/ui/components/sign-out-button";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 const TabsLayout = () => {
 	return (
@@ -31,6 +35,9 @@ const TabsLayout = () => {
 				tabBarInactiveTintColor: "#6b7280",
 				headerShadowVisible: false,
 				headerTitleAlign: "center",
+				headerLeft: () => (
+					<MaterialIcons name="health-and-safety" className="ml-4" size={26} color={"#ef4444"} />
+				),
 				headerRight: () => <SignOutButton />,
 			}}
 		>
@@ -38,14 +45,28 @@ const TabsLayout = () => {
 				name="home"
 				options={{
 					title: "Trang chủ",
+					headerTitle: "Blood Link",
+					headerTitleAlign: "left",
 					headerShown: true,
 					tabBarIcon: ({ color }) => <Ionicons name="home" size={26} color={color} />,
+				}}
+			/>
+			<Tabs.Screen
+				name="near-by"
+				options={{
+					title: "Gần đây",
+					headerTitleAlign: "left",
+					headerShown: true,
+					tabBarIcon: ({ color }) => (
+						<MaterialCommunityIcons name="near-me" size={24} color={color} />
+					),
 				}}
 			/>
 			<Tabs.Screen
 				name="blood-search"
 				options={{
 					title: "Thông tin máu",
+					headerTitleAlign: "left",
 					headerShown: true,
 					tabBarIcon: ({ color }) => <Ionicons name="search" size={26} color={color} />,
 				}}
@@ -55,6 +76,7 @@ const TabsLayout = () => {
 				options={{
 					title: "Yêu cầu",
 					headerShown: true,
+					headerTitleAlign: "left",
 					tabBarIcon: ({ color }) => (
 						<MaterialCommunityIcons name="form-select" size={26} color={color} />
 					),
@@ -64,6 +86,7 @@ const TabsLayout = () => {
 				name="profile"
 				options={{
 					title: "Hồ sơ",
+					headerTitleAlign: "left",
 					headerShown: true,
 					tabBarIcon: ({ color }) => <Ionicons name="water" size={26} color={color} />,
 				}}

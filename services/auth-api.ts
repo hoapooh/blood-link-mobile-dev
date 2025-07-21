@@ -1,6 +1,12 @@
-import axiosInstance from "@/config/axios-instance";
-import { IUser, IUserUpdate } from "@/interfaces/user";
 import { isAxiosError } from "axios";
+
+import axiosInstance from "@/config/axios-instance";
+import {
+  IUser,
+  IUserFindNearBy,
+  IUserFindNearByParams,
+  IUserUpdate,
+} from "@/interfaces/user";
 
 export const authApi = {
 	getCurrentProfile: async (): Promise<IUser> => {
@@ -22,6 +28,18 @@ export const authApi = {
 		} catch (error) {
 			if (isAxiosError(error)) {
 				throw new Error(error.response?.data?.message || "Failed to update user");
+			}
+			throw error;
+		}
+	},
+
+	findNearByUsers: async (params: IUserFindNearByParams): Promise<IUserFindNearBy> => {
+		try {
+			const response = await axiosInstance.get("/customers/find-nearby", { params });
+			return response.data;
+		} catch (error) {
+			if (isAxiosError(error)) {
+				throw new Error(error.response?.data?.message || "Failed to find nearby users");
 			}
 			throw error;
 		}

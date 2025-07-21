@@ -1,15 +1,14 @@
+import { useEffect } from "react";
+
 import { setAuthToken } from "@/config/axios-instance";
 import { useAuthStore } from "@/store/slice/auth/auth-store";
 import { useAuth } from "@clerk/clerk-expo";
-import { useEffect } from "react";
 
 export const useAuthSync = () => {
 	const { getToken, isSignedIn, isLoaded, sessionId } = useAuth();
 	const { login, logout, initializeAuth } = useAuthStore();
 
 	useEffect(() => {
-		console.log(JSON.stringify({ isSignedIn, sessionId }, null, 2));
-
 		const syncAuth = async () => {
 			if (!isLoaded) return;
 
