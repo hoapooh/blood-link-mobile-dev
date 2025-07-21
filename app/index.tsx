@@ -1,12 +1,10 @@
-import { useAuthStore } from "@/store/slice/auth/auth-store";
 import { Redirect } from "expo-router";
-import React from "react";
 import { ActivityIndicator, View } from "react-native";
+
+import { useAuthStore } from "@/store/slice/auth/auth-store";
 
 const IndexPage = () => {
 	const { isAuthenticated, isLoading, token } = useAuthStore();
-
-	console.log(JSON.stringify({ token, isAuthenticated }, null, 2));
 
 	// Show loading state while checking authentication
 	if (isLoading) {

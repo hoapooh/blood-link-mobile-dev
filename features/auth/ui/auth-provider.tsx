@@ -1,7 +1,8 @@
+import React, { useCallback, useEffect, useRef } from "react";
+
 import { setAuthToken } from "@/config/axios-instance";
 import { useAuthStore } from "@/store/slice/auth/auth-store";
 import { useAuth } from "@clerk/clerk-expo";
-import React, { useCallback, useEffect, useRef } from "react";
 
 interface AuthProviderProps {
 	children: React.ReactNode;
@@ -25,7 +26,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 			prevAuthState.current.sessionId !== sessionId ||
 			prevAuthState.current.isLoaded !== isLoaded
 		) {
-			console.log("Auth state changed:", JSON.stringify(currentState, null, 2));
 			prevAuthState.current = currentState;
 		}
 
