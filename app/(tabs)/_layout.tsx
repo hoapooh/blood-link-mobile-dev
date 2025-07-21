@@ -1,11 +1,7 @@
 import { Tabs } from "expo-router";
 
 import { SignOutButton } from "@/features/auth/ui/components/sign-out-button";
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 const TabsLayout = () => {
 	return (
@@ -55,6 +51,7 @@ const TabsLayout = () => {
 				name="near-by"
 				options={{
 					title: "Gần đây",
+					headerTitle: "Tìm kiếm gần đây",
 					headerTitleAlign: "left",
 					headerShown: true,
 					tabBarIcon: ({ color }) => (
