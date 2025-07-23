@@ -1,7 +1,8 @@
+import React, { useEffect, useRef } from "react";
+
 import { setAuthToken } from "@/config/axios-instance";
 import { useAuthStore } from "@/store/slice/auth/auth-store";
 import { useAuth, useUser } from "@clerk/clerk-expo";
-import React, { useEffect, useRef } from "react";
 
 interface AuthProviderProps {
 	children: React.ReactNode;
@@ -29,10 +30,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 		if (!hasChanged) return;
 
-		console.log(
-			"Auth state changed:",
-			JSON.stringify({ isSignedIn, sessionId, isLoaded }, null, 2)
-		);
 		prevAuthState.current = { isSignedIn, sessionId, isLoaded };
 
 		const syncAuth = async () => {
@@ -45,8 +42,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 					const token = await getToken({
 						template: "default",
 					});
-
-					console.log(JSON.stringify({ token }, null, 2));
 
 					if (token) {
 						setAuthToken(token);
