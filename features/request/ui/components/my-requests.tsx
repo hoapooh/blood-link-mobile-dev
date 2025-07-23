@@ -13,12 +13,14 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useGetEmergencyRequests } from "@/features/request/hooks";
 import { IBloodType } from "@/interfaces/emergency-request";
+import { useRouter } from "expo-router";
 import { AlertTriangle, X } from "lucide-react-native";
 import React from "react";
 import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 
 const MyRequests = () => {
 	const { emergencyRequests, isLoading, isError, error, refetch } = useGetEmergencyRequests();
+	const router = useRouter();
 
 	const getStatusInfo = (status: string) => {
 		switch (status) {
@@ -195,8 +197,7 @@ const MyRequests = () => {
 										action="primary"
 										className="flex-1"
 										onPress={() => {
-											// Handle view details action
-											console.log("Viewing details for request:", request.id);
+											router.push(`/(emergency-request)/${request.id}` as any);
 										}}
 									>
 										<ButtonText>Xem chi tiết</ButtonText>

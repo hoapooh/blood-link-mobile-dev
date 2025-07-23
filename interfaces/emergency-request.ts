@@ -22,11 +22,13 @@ export interface IBloodType {
 export interface IEmergencyRequestData {
   id: string;
   requiredVolume: number;
+  usedVolume?: number;
   bloodType: IBloodType;
   bloodTypeComponent: BloodTypeComponent;
+  bloodUnit?: string | null;
   status: EmergencyRequestStatus;
   description: string;
-  rejectionReason: string;
+  rejectionReason: string | null;
   startDate: string;
   endDate: string;
   wardCode: string;
@@ -39,6 +41,13 @@ export interface IEmergencyRequestData {
   latitude: string;
   createdAt: string;
   updatedAt: string;
+  requestedBy?: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    email: string;
+    role: string;
+  };
 }
 
 export interface IEmergencyRequestMeta {

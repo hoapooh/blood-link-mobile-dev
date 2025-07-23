@@ -37,4 +37,20 @@ export const emergencyRequestApi = {
       throw error;
     }
   },
+
+  getEmergencyRequestById: async (
+    requestId: string
+  ): Promise<{ success: boolean; message: string; data: IEmergencyRequestData }> => {
+    try {
+      const response = await axiosInstance.get(`/emergency-requests/${requestId}`);
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message || "Failed to get emergency request details"
+        );
+      }
+      throw error;
+    }
+  },
 };
