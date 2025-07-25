@@ -1,3 +1,4 @@
+import { Toast, ToastDescription, ToastTitle, useToast } from "@/components/ui/toast";
 import { IDistrictItem, IProvinceItem, IWardItem } from "@/interfaces/location";
 import { IUser, IUserUpdate } from "@/interfaces/user";
 import React, { useState } from "react";
@@ -14,7 +15,68 @@ interface ProfileInfoProps {
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, isLoading }) => {
 	const [isLocationDialogOpen, setIsLocationDialogOpen] = useState(false);
 	const [isPersonalInfoDialogOpen, setIsPersonalInfoDialogOpen] = useState(false);
-	const { updateProfile, isLoading: isUpdating } = useUpdateProfile();
+	const { updateProfileAsync, isLoading: isUpdating } = useUpdateProfile();
+	const toast = useToast();
+
+	const handleLocationUpdate = async (locationData: Partial<IUserUpdate>) => {
+		try {
+			await updateProfileAsync(locationData);
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					return (
+						<Toast nativeID={id} action="success" variant="outline">
+							<ToastTitle>Thành công</ToastTitle>
+							<ToastDescription>Cập nhật địa chỉ thành công!</ToastDescription>
+						</Toast>
+					);
+				},
+			});
+			setIsLocationDialogOpen(false);
+		} catch {
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					return (
+						<Toast nativeID={id} action="error" variant="outline">
+							<ToastTitle>Lỗi</ToastTitle>
+							<ToastDescription>Không thể cập nhật địa chỉ. Vui lòng thử lại!</ToastDescription>
+						</Toast>
+					);
+				},
+			});
+		}
+	};
+
+	const handlePersonalInfoUpdate = async (personalData: IUserUpdate) => {
+		try {
+			await updateProfileAsync(personalData);
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					return (
+						<Toast nativeID={id} action="success" variant="outline">
+							<ToastTitle>Thành công</ToastTitle>
+							<ToastDescription>Cập nhật thông tin thành công!</ToastDescription>
+						</Toast>
+					);
+				},
+			});
+			setIsPersonalInfoDialogOpen(false);
+		} catch {
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					return (
+						<Toast nativeID={id} action="error" variant="outline">
+							<ToastTitle>Lỗi</ToastTitle>
+							<ToastDescription>Không thể cập nhật thông tin. Vui lòng thử lại!</ToastDescription>
+						</Toast>
+					);
+				},
+			});
+		}
+	};
 
 	if (isLoading) {
 		return (
@@ -31,22 +93,47 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, isLoading }) => {
 			</Text>
 		</View>
 	);
+
+	const getBloodTypeDisplay = () => {
+		// Handle the case where bloodType is null (from API response)
+		if (!user?.data?.bloodType) {
+			return null;
+		}
+		
+		// If bloodType exists and has both group and rh
+		if (user.data.bloodType.group && user.data.bloodType.rh) {
+			return `${user.data.bloodType.group}${user.data.bloodType.rh}`;
+		}
+		
+		return null;
+	};
+
+	const getGenderDisplay = (gender: string | null | undefined) => {
+		if (!gender) return null;
+		return gender === "male" ? "Nam" : gender === "female" ? "Nữ" : gender === "other" ? "Khác" : gender;
+	};
+
+	const formatDateOfBirth = (dateString: string | null | undefined) => {
+		if (!dateString) return null;
+		try {
+			// Handle both DD/MM/YYYY and ISO date formats
+			if (dateString.includes("/")) {
+				return dateString; // Already in DD/MM/YYYY format
+			} else {
+				return new Date(dateString).toLocaleDateString("vi-VN");
+			}
+		} catch {
+			return dateString; // Return as-is if parsing fails
+		}
+	};
+
 	const getFullAddress = () => {
 		const parts = [user?.data?.wardName, user?.data?.districtName, user?.data?.provinceName].filter(
 			Boolean
 		);
 		return parts.length > 0 ? parts.join(", ") : null;
 	};
-	const handleLocationUpdate = (locationData: Partial<IUserUpdate>) => {
-		updateProfile(locationData);
-		setIsLocationDialogOpen(false);
-	};
-
-	const handlePersonalInfoUpdate = (personalData: IUserUpdate) => {
-		updateProfile(personalData);
-		setIsPersonalInfoDialogOpen(false);
-	};
-
+	
 	const getInitialLocation = () => {
 		if (!user?.data) return undefined;
 
@@ -125,8 +212,13 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, isLoading }) => {
 				<InfoRow label="Họ" value={user?.data?.lastName} />
 				<InfoRow label="Email" value={user?.data?.account.email} />
 				<InfoRow label="Số điện thoại" value={user?.data?.phone} />
+				<InfoRow label="Giới tính" value={getGenderDisplay(user?.data?.gender)} />
+				<InfoRow label="Ngày sinh" value={formatDateOfBirth(user?.data?.dateOfBirth)} />
+				<InfoRow label="CCCD/CMND" value={user?.data?.citizenId} />
+				<InfoRow label="Nhóm máu" value={getBloodTypeDisplay()} />
 				<AddressRow />
 			</View>
+		
 			{/* Account Info */}
 			<View className="mt-6">
 				<Text className="text-xl font-bold text-gray-900 dark:text-white mb-4">
@@ -145,6 +237,19 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, isLoading }) => {
 								: null
 						}
 					/>
+					<InfoRow
+						label="Lần hiến máu cuối"
+						value={
+							user?.data?.lastDonationDate
+								? new Date(user.data.lastDonationDate).toLocaleDateString("vi-VN", {
+										year: "numeric",
+										month: "long",
+										day: "2-digit",
+								  })
+								: null
+						}
+					/>
+					<InfoRow label="Trạng thái" value={user?.data?.status === "active" ? "Hoạt động" : user?.data?.status} />
 				</View>
 			</View>
 			<LocationPickerDialog
@@ -161,6 +266,11 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, isLoading }) => {
 					firstName: user?.data?.firstName,
 					lastName: user?.data?.lastName,
 					phone: user?.data?.phone,
+					gender: user?.data?.gender as "male" | "female" | "other" | null,
+					dateOfBirth: user?.data?.dateOfBirth,
+					citizenId: user?.data?.citizenId,
+					bloodGroup: user?.data?.bloodType?.group || null,
+					bloodRh: user?.data?.bloodType?.rh || null,
 				}}
 				isLoading={isUpdating}
 			/>

@@ -8,7 +8,7 @@ const Introduction = () => {
   return (
     <Box className="bg-white text-black px-4 py-10 text-center w-full">
       <VStack className="items-center">
-        <Text className="text-black/90 text-xl md:text-4xl font-bold">
+        <Text className="text-red-600 text-xl md:text-4xl font-bold">
           Giới thiệu
         </Text>
         <Text className="text-sm md:text-lg text-center text-black/90 max-w-lg py-5">

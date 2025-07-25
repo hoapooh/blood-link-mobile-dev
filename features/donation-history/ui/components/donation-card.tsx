@@ -19,10 +19,6 @@ const statusStyles: Record<RequestStatus, { bg: string; text: string }> = {
     bg: "bg-yellow-100",
     text: "text-yellow-600",
   },
-  [RequestStatus.approved]: {
-    bg: "bg-green-100",
-    text: "text-green-600",
-  },
   [RequestStatus.completed]: {
     bg: "bg-green-100",
     text: "text-green-600",
@@ -31,14 +27,69 @@ const statusStyles: Record<RequestStatus, { bg: string; text: string }> = {
     bg: "bg-red-100",
     text: "text-red-600",
   },
-  [RequestStatus.canceled]: {
+  [RequestStatus.result_returned]: {
+    bg: "bg-blue-100",
+    text: "text-blue-600",
+  },
+  [RequestStatus.appointment_confirmed]: {
+    bg: "bg-green-100",
+    text: "text-green-600",
+  },
+  [RequestStatus.appointment_cancelled]: {
     bg: "bg-red-100",
     text: "text-red-600",
   },
-  [RequestStatus.failed]: {
-    bg: "bg-red-100",
-    text: "text-red-600",
+  [RequestStatus.appointment_absent]: {
+    bg: "bg-orange-100",
+    text: "text-orange-600",
   },
+  [RequestStatus.customer_cancelled]: {
+    bg: "bg-gray-100",
+    text: "text-gray-600",
+  },
+  [RequestStatus.customer_checked_in]: {
+    bg: "bg-blue-100",
+    text: "text-blue-600",
+  },
+};
+
+const getStatusStyle = (status: RequestStatus) => {
+  // Handle status with potential spaces by converting to enum value first
+  const normalizedStatus = status.toString().toLowerCase().replace(/\s+/g, '_') as RequestStatus;
+  
+  return statusStyles[normalizedStatus] || {
+    bg: "bg-gray-100",
+    text: "text-gray-600",
+  };
+};
+
+const getStatusDisplay = (status: RequestStatus): string => {
+  // Handle status with potential spaces by converting to enum value first
+  const normalizedStatus = status.toString().toLowerCase().replace(/\s+/g, '_') as RequestStatus;
+  
+  switch (normalizedStatus) {
+    case RequestStatus.pending:
+      return "Đang chờ";
+    case RequestStatus.completed:
+      return "Hoàn thành";
+    case RequestStatus.rejected:
+      return "Bị từ chối";
+    case RequestStatus.result_returned:
+      return "Đã trả kết quả";
+    case RequestStatus.appointment_confirmed:
+      return "Đã xác nhận";
+    case RequestStatus.appointment_cancelled:
+      return "Đã bị hủy";
+    case RequestStatus.appointment_absent:
+      return "Vắng mặt";
+    case RequestStatus.customer_cancelled:
+      return "Đã hủy";
+    case RequestStatus.customer_checked_in:
+      return "Đã check-in";
+    default:
+      // Fallback: display the original status with proper formatting
+      return status.toString().replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  }
 };
 
 const DonationRequestCard: React.FC<DonationRequestCardProps> = ({ request, onView }) => {
@@ -55,7 +106,7 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({ request, onVi
       <VStack space="md" className="p-4">
         {/* Header: Campaign name + Status */}
         <HStack className="justify-between items-start">
-          <VStack className="flex-1 pr-2">
+          <VStack className="flex-1 pr-3">
             <Text className="text-base font-bold text-red-600">
               {campaign?.name || "Chiến dịch không xác định"}
             </Text>
@@ -64,9 +115,9 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({ request, onVi
             </Text>
           </VStack>
           {currentStatus && (
-            <Badge className={`${statusStyles[currentStatus].bg} px-3 py-1 rounded-full`}>
-              <BadgeText className={`${statusStyles[currentStatus].text} text-xs font-medium`}>
-                {currentStatus}
+            <Badge className={`${getStatusStyle(currentStatus).bg} px-2 py-1 rounded-full shrink-0 min-w-0`}>
+              <BadgeText className={`${getStatusStyle(currentStatus).text} text-xs font-medium text-center`}>
+                {getStatusDisplay(currentStatus)}
               </BadgeText>
             </Badge>
           )}
@@ -90,7 +141,7 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({ request, onVi
         <HStack className="items-center" space="sm">
           <Icon as={CalendarDaysIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-600">
-            Ngày hiến máu: {collectionDate}
+            Ngày hẹn: {dayjs(request.appointmentDate).format("DD/MM/YYYY")}
           </Text>
         </HStack>
 
@@ -99,6 +150,18 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({ request, onVi
           <Icon as={ClockIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-600">{campaignTime}</Text>
         </HStack>
+
+        {/* Appointment Date and Note */}
+        <VStack space="md">
+          {/* <Text className="text-sm text-gray-900">
+            Ngày hẹn: {dayjs(request.appointmentDate).format("DD/MM/YYYY")}
+          </Text> */}
+          {request.note && (
+            <Text className="text-sm text-gray-600">
+              Ghi chú: {request.note}
+            </Text>
+          )}
+        </VStack>
 
         {/* Action */}
         {onView && (

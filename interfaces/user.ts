@@ -15,21 +15,22 @@ export interface IUserData {
 	bloodType: {
 		group: BloodGroup | null;
 		rh: BloodRh | null;
-	};
+	} | null;
 	firstName: string | null;
 	lastName: string | null;
-	gender: string | null;
+	gender: "male" | "female" | "other" | null;
 	phone: string | null;
-	dateOfBirth: string | null; // ISO format expected (e.g. "2025-06-10T00:00:00Z")
+	dateOfBirth: string | null;
 	citizenId: string | null;
-	longitude: number | null;
-	latitude: number | null;
+	longitude: string | null;
+	latitude: string | null;
 	wardCode: string | null;
 	districtCode: string | null;
 	provinceCode: string | null;
 	wardName: string | null;
 	districtName: string | null;
 	provinceName: string | null;
+	lastDonationDate: string | null;
 	status: string | null;
 }
 
@@ -38,6 +39,8 @@ export interface IUserUpdate {
 	firstName?: string | null;
 	lastName?: string | null;
 	phone?: string | null;
+	gender?: "male" | "female" | "other" | null;
+	dateOfBirth?: string | null;
 	citizenId?: string | null;
 	longitude?: string | null;
 	latitude?: string | null;

@@ -8,6 +8,7 @@ import { VStack } from "@/components/ui/vstack";
 import { CampaignStatus, ICampaignData } from "@/interfaces/campaign";
 import dayjs from "dayjs";
 import {
+  AlertTriangle,
   CalendarDaysIcon,
   CheckCircle2,
   ClockIcon,
@@ -67,6 +68,19 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
     },
   };
 
+  const getStatusDisplay = (status: CampaignStatus): string => {
+    switch (status) {
+      case CampaignStatus.not_started:
+        return "Chưa bắt đầu";
+      case CampaignStatus.active:
+        return "Đang diễn ra";
+      case CampaignStatus.ended:
+        return "Đã kết thúc";
+      default:
+        return status;
+    }
+  };
+
   return (
     <Card className="border border-outline-200 rounded-xl bg-white shadow-sm w-full px-6 py-8">
       <VStack space="md">
@@ -82,7 +96,7 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
             <BadgeText
               className={`${statusColors[derivedStatus].text} text-xs font-medium`}
             >
-              {derivedStatus}
+              {getStatusDisplay(derivedStatus)}
             </BadgeText>
           </Badge>
         </HStack>
@@ -128,21 +142,24 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
           className="border border-yellow-300 bg-yellow-100 rounded-md p-4"
           space="sm"
         >
-          <Text className="text-md font-bold text-yellow-700">
-            Lưu ý trước khi hiến máu
-          </Text>
+          <HStack>
+            <Icon as={AlertTriangle} size="md" className="text-yellow-600 mr-2" />
+            <Text className="text-md font-bold text-yellow-700">
+              Lưu ý trước khi hiến máu
+            </Text>
+          </HStack>
           <VStack space="xs">
             <Text className="text-sm text-yellow-800">
-              - Không nên hiến máu khi bạn đang bị sốt hoặc cảm cúm.
+              • Không nên hiến máu khi bạn đang bị sốt hoặc cảm cúm.
             </Text>
             <Text className="text-sm text-yellow-800">
-              - Hãy đảm bảo bạn đã ăn uống đầy đủ trước khi hiến máu.
+              • Hãy đảm bảo bạn đã ăn uống đầy đủ trước khi hiến máu.
             </Text>
             <Text className="text-sm text-yellow-800">
-              - Tránh uống rượu bia ít nhất 24 giờ trước khi hiến máu.
+              • Tránh uống rượu bia ít nhất 24 giờ trước khi hiến máu.
             </Text>
             <Text className="text-sm text-yellow-800">
-              - Nếu bạn đang dùng thuốc hoặc có bệnh lý, hãy hỏi ý kiến bác sĩ
+              • Nếu bạn đang dùng thuốc hoặc có bệnh lý, hãy hỏi ý kiến bác sĩ
               trước.
             </Text>
           </VStack>

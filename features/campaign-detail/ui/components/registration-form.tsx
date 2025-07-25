@@ -47,6 +47,7 @@ const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
     "success" | "error" | null
   >(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [note, setNote] = useState<string>("");
 
   const getFullAddress = () => {
     const parts = [
@@ -63,6 +64,8 @@ const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
     try {
       await createRequestAsync({
         campaignId: campaign.id,
+        appointmentDate: campaign.bloodCollectionDate,
+        note: note || "",
       });
       setSubmissionResult("success");
     } catch (error) {
@@ -70,6 +73,8 @@ const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
       setErrorMessage(error?.toString() || "Đã xảy ra lỗi khi gửi yêu cầu.");
     }
   };
+
+  
 
   if (isLoading) {
     return (
@@ -243,6 +248,24 @@ const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
                       <InputField value="07:30 → 16:30" />
                     </Input>
                   </VStack>
+                  <VStack className="space-y-2 pb-4">
+                    <Text className="text-sm">Ngày hẹn hiến máu</Text>
+                    <Input isDisabled>
+                      <InputField
+                        value={dayjs(campaign.bloodCollectionDate).format("DD/MM/YYYY")}
+                      />
+                    </Input>
+                  </VStack>
+                  <VStack className="space-y-2 pb-4">
+                    <Text className="text-sm">Ghi chú</Text>
+                    <Input >
+                      <InputField
+                        placeholder="Nhập ghi chú (không bắt buộc)"
+                        value={note}
+                        onChangeText={setNote}
+                      />
+                    </Input>
+                  </VStack>
                 </VStack>
 
                 {/* Health Agreement */}
@@ -301,7 +324,7 @@ const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
                   action="primary"
                   className="flex-1 bg-red-500"
                   onPress={handleSubmit}
-                  isDisabled={!agree || isLoading}
+                  isDisabled={!agree || isLoading }
                 >
                   <ButtonText className="text-white">Gửi</ButtonText>
                 </Button>

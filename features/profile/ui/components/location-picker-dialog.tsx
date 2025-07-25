@@ -24,7 +24,7 @@ import {
 	SelectTrigger,
 } from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { IDistrictItem, IProvinceItem, IWardItem } from "@/interfaces/location";
 import { IUserUpdate } from "@/interfaces/user";
@@ -90,17 +90,17 @@ const LocationPickerDialog: React.FC<LocationPickerDialogProps> = ({
 			};
 			onSave(locationData);
 			onClose();
-			toast.show({
-				placement: "bottom",
-				containerStyle: {
-					marginBottom: 60,
-				},
-				render: ({ id }) => (
-					<Toast nativeID={id} variant="solid" action="success">
-						<ToastTitle>Location saved successfully!</ToastTitle>
-					</Toast>
-				),
-			});
+			// toast.show({
+			// 	placement: "bottom",
+			// 	containerStyle: {
+			// 		marginBottom: 60,
+			// 	},
+			// 	render: ({ id }) => (
+			// 		<Toast nativeID={id} variant="solid" action="success">
+			// 			<ToastTitle>Location saved successfully!</ToastTitle>
+			// 		</Toast>
+			// 	),
+			// });
 		}
 	};
 

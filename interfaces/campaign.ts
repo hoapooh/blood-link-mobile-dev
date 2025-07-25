@@ -32,7 +32,34 @@ export interface ICampaignMeta {
 	hasPreviousPage: boolean;
 }
 
+// Interface for campaign statistics
+export interface ICampaignStatistics {
+	totalDonations: number;
+	statusCounts: {
+		pending: number;
+		rejected: number;
+		completed: number;
+		result_returned: number;
+		appointment_confirmed: number;
+		appointment_cancelled: number;
+		appointment_absent: number;
+		customer_cancelled: number;
+		customer_checked_in: number;
+	};
+	completedDonations: number;
+	completionRate: number;
+	dailyRegistrations: {
+		date: string;
+		count: number;
+	}[];
+}
+
+// Interface for detailed campaign with statistics
+export interface ICampaignDetailData extends ICampaignData {
+	statistics: ICampaignStatistics;
+	metadata: Record<string, any>;
+}
 
 export type ICampaignList = IBase<ICampaignData[]>;
-export type ICampaignDetail = IBase<ICampaignData>;
+export type ICampaignDetail = IBase<ICampaignDetailData>;
 export type ICampaignPagination = IBase<ICampaignMeta>;
