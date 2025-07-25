@@ -29,7 +29,7 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({ onSignOut }) => {
 	};
 	return (
 		<View className="px-6 py-6">
-			<Text className="text-xl font-bold text-gray-900 dark:text-white mb-4">Hành động nhanh</Text>
+			{/* <Text className="text-xl font-bold text-gray-900 dark:text-white mb-4">Hành động nhanh</Text> */}
 
 			<View className="space-y-3">
 				<ActionButton
@@ -39,7 +39,7 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({ onSignOut }) => {
 					}}
 				/>
 
-				<ActionButton
+				{/* <ActionButton
 					title="Cài đặt quyền riêng tư"
 					onPress={() => {
 						// TODO: Navigate to privacy settings
@@ -53,7 +53,7 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({ onSignOut }) => {
 						// TODO: Navigate to notification settings
 						console.log("Notification settings pressed");
 					}}
-				/>
+				/> */}
 
 				<ActionButton
 					title="Trợ giúp & Hỗ trợ"
@@ -64,11 +64,8 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({ onSignOut }) => {
 				/>
 			</View>
 
-			{/* Danger Zone */}
-			<View className="mt-8">
-				<Text className="text-lg font-bold text-red-600 mb-4">Vùng nguy hiểm</Text>
 				<ActionButton title="Đăng xuất" onPress={onSignOut} variant="danger" />
-			</View>
+			
 		</View>
 	);
 };

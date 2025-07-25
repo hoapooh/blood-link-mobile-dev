@@ -44,7 +44,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, isLoading }) => {
 					{user?.data?.account.email || "Không có email"}
 				</Text>
 				{/* Blood Type */}
-				{user?.data?.bloodType && (
+				{user?.data?.bloodType && user.data.bloodType.group && user.data.bloodType.rh && (
 					<View className="bg-red-600 px-3 py-1 rounded-full mt-2">
 						<Text className="text-white font-semibold">
 							Nhóm máu: {user.data.bloodType.group}
