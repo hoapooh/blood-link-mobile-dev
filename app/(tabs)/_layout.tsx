@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 
-import { SignOutButton } from "@/features/auth/ui/components/sign-out-button";
+import { NotificationBell } from "@/features/reminders";
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 const TabsLayout = () => {
@@ -34,7 +34,7 @@ const TabsLayout = () => {
 				headerLeft: () => (
 					<MaterialIcons name="health-and-safety" className="ml-4" size={26} color={"#ef4444"} />
 				),
-				headerRight: () => <SignOutButton />,
+				headerRight: () => <NotificationBell />,
 			}}
 		>
 			<Tabs.Screen
