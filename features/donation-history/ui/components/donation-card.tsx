@@ -141,7 +141,7 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({ request, onVi
         <HStack className="items-center" space="sm">
           <Icon as={CalendarDaysIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-600">
-            Ngày hiến máu: {collectionDate}
+            Ngày hẹn: {dayjs(request.appointmentDate).format("DD/MM/YYYY")}
           </Text>
         </HStack>
 
@@ -150,6 +150,18 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({ request, onVi
           <Icon as={ClockIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-600">{campaignTime}</Text>
         </HStack>
+
+        {/* Appointment Date and Note */}
+        <VStack space="md">
+          {/* <Text className="text-sm text-gray-900">
+            Ngày hẹn: {dayjs(request.appointmentDate).format("DD/MM/YYYY")}
+          </Text> */}
+          {request.note && (
+            <Text className="text-sm text-gray-600">
+              Ghi chú: {request.note}
+            </Text>
+          )}
+        </VStack>
 
         {/* Action */}
         {onView && (

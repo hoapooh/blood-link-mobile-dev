@@ -1,4 +1,3 @@
-import { CustomHeader } from "@/components/ui/custom-header";
 import { Stack } from "expo-router";
 
 export default function CampaignRoutesLayout() {
@@ -6,12 +5,21 @@ export default function CampaignRoutesLayout() {
     <Stack
       screenOptions={{
         headerShown: true,
-        header: ({ options }) => <CustomHeader title={options.title || ""} />,
+        headerStyle: {
+          backgroundColor: "#fffafa",
+        },
+        headerTintColor: "#ef4444",
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
       }}
     >
       <Stack.Screen
         name="[id]"
-        options={{ title: "Chi tiết chiến dịch" }} // or "Detail"
+        options={{
+          title: "Chi tiết chiến dịch",
+          headerBackTitle: "Quay lại",
+        }}
       />
     </Stack>
   );

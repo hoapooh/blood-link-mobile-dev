@@ -1,8 +1,10 @@
 import axiosInstance from "@/config/axios-instance";
+import { IBase } from "@/interfaces/base";
 import {
-  ICreateDonationRequestPayload,
-  IDonationRequest,
-  IDonationRequestHistory,
+	ICreateDonationRequestPayload,
+	IDonationRequest,
+	IDonationRequestHistory,
+	IDonationRequestResult,
 } from "@/interfaces/donation-request";
 import { isAxiosError } from "axios";
 
@@ -56,6 +58,24 @@ export const donationApi = {
       if (isAxiosError(error)) {
         throw new Error(
           error.response?.data?.message || "Failed to get my request by ID"
+        );
+      }
+      throw error;
+    }
+  },
+
+  getDonationResult: async (
+    donationId: string
+  ): Promise<IBase<IDonationRequestResult>> => {
+    try {
+      const response = await axiosInstance.get(
+        `/donations/my-requests/${donationId}/result`
+      );
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message || "Failed to get donation result"
         );
       }
       throw error;

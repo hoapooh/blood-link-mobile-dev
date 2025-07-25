@@ -46,18 +46,21 @@ const DonationList = () => {
 
   return (
     <Box className="flex-1 w-full min-h-0">
-      <Text className="text-2xl md:text-4xl font-bold px-4 py-6">
-        Lịch sử đăng ký của tôi
-      </Text>
-      <VStack space="xl">
-        {data?.map((request: IDonationRequestData) => (
-          <DonationRequestCard
-            key={request.id || Math.random().toString()}
-            request={request}
-            onView={() => handleViewDetails(request.id)}
-          />
-        ))}
-      </VStack>
+      {data?.length === 0 ? (
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-lg text-gray-600">Chưa có yêu cầu nào</Text>
+        </View>
+      ) : (
+        <VStack space="xl">
+          {data.map((request: IDonationRequestData) => (
+            <DonationRequestCard
+              key={request.id || Math.random().toString()}
+              request={request}
+              onView={() => handleViewDetails(request.id)}
+            />
+          ))}
+        </VStack>
+      )}
     </Box>
   );
 };

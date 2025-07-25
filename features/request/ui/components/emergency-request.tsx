@@ -7,7 +7,7 @@ import { Toast, ToastDescription, ToastTitle, useToast } from "@/components/ui/t
 import { VStack } from "@/components/ui/vstack";
 import { useCreateEmergencyRequest } from "@/features/request/hooks";
 import { CreateEmergencyRequestDto } from "@/interfaces/create-emergency-request";
-import { AlertTriangle, HeartIcon, MapPin, Phone, Zap } from "lucide-react-native";
+import { AlertTriangle, HeartIcon, Phone, Zap } from "lucide-react-native";
 import React, { useState } from "react";
 import BloodRequestForm from "./blood-request-form";
 
@@ -216,7 +216,7 @@ const EmergencyRequest = () => {
 					<Text className="text-lg font-semibold text-gray-900">Liên hệ ngay</Text>
 
 					<VStack space="md">
-						<Button
+						{/* <Button
 							variant="outline"
 							action="secondary"
 							className="w-full border-red-300 bg-[#fffafa]"
@@ -227,7 +227,7 @@ const EmergencyRequest = () => {
 						>
 							<Icon as={MapPin} size="sm" className="text-red-600 mr-3" />
 							<ButtonText className="text-red-600 font-medium">Tìm ngân hàng máu gần đây</ButtonText>
-						</Button>
+						</Button> */}
 
 						<Button
 							variant="outline"

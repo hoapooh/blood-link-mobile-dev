@@ -7,17 +7,19 @@ import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import useGetDonationDetail from "@/features/donation-history/hooks/use-get-donation-detail";
+import useGetDonationResult from "@/features/donation-history/hooks/use-get-donation-result";
 import { useGetProfile } from "@/features/profile/hooks";
 import { RequestStatus } from "@/interfaces/donation-request";
 import dayjs from "dayjs";
 import {
   CalendarDaysIcon,
   ClockIcon,
+  DropletIcon,
   IdCardIcon,
   Mail,
   MapPin,
   PhoneIcon,
-  UserIcon,
+  UserIcon
 } from "lucide-react-native";
 import React from "react";
 import { Image, ScrollView } from "react-native";
@@ -28,55 +30,86 @@ interface DonationDetailProps {
 
 const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
   const { donation, isLoading, isError, error } = useGetDonationDetail(donationId);
+  const { result, isLoading: isResultLoading } = useGetDonationResult(donationId);
   const { user } = useGetProfile(); // Get current user profile for email
 
-  // Status colors and Vietnamese translations
-  const statusConfig: Record<RequestStatus, { bg: string; text: string; label: string }> = {
+  // Status colors and Vietnamese translations - consistent with donation card
+  const statusStyles: Record<RequestStatus, { bg: string; text: string }> = {
     [RequestStatus.pending]: {
       bg: "bg-yellow-100",
-      text: "text-yellow-700",
-      label: "Đang chờ",
-    },
-    [RequestStatus.appointment_confirmed]: {
-      bg: "bg-blue-100", 
-      text: "text-blue-700",
-      label: "Đã xác nhận",
-    },
-    [RequestStatus.customer_checked_in]: {
-      bg: "bg-green-100",
-      text: "text-green-700", 
-      label: "Đã check-in",
+      text: "text-yellow-600",
     },
     [RequestStatus.completed]: {
       bg: "bg-green-100",
-      text: "text-green-700",
-      label: "Hoàn thành",
-    },
-    [RequestStatus.result_returned]: {
-      bg: "bg-purple-100",
-      text: "text-purple-700",
-      label: "Đã trả kết quả",
+      text: "text-green-600",
     },
     [RequestStatus.rejected]: {
       bg: "bg-red-100",
-      text: "text-red-700",
-      label: "Bị từ chối",
+      text: "text-red-600",
+    },
+    [RequestStatus.result_returned]: {
+      bg: "bg-blue-100",
+      text: "text-blue-600",
+    },
+    [RequestStatus.appointment_confirmed]: {
+      bg: "bg-green-100",
+      text: "text-green-600",
     },
     [RequestStatus.appointment_cancelled]: {
       bg: "bg-red-100",
-      text: "text-red-700",
-      label: "Đã bị hủy",
+      text: "text-red-600",
     },
     [RequestStatus.appointment_absent]: {
       bg: "bg-orange-100",
-      text: "text-orange-700",
-      label: "Vắng mặt",
+      text: "text-orange-600",
     },
     [RequestStatus.customer_cancelled]: {
       bg: "bg-gray-100",
-      text: "text-gray-700",
-      label: "Đã hủy",
+      text: "text-gray-600",
     },
+    [RequestStatus.customer_checked_in]: {
+      bg: "bg-blue-100",
+      text: "text-blue-600",
+    },
+  };
+
+  const getStatusStyle = (status: RequestStatus) => {
+    // Handle status with potential spaces by converting to enum value first
+    const normalizedStatus = status.toString().toLowerCase().replace(/\s+/g, '_') as RequestStatus;
+    
+    return statusStyles[normalizedStatus] || {
+      bg: "bg-gray-100",
+      text: "text-gray-600",
+    };
+  };
+
+  const getStatusDisplay = (status: RequestStatus): string => {
+    // Handle status with potential spaces by converting to enum value first
+    const normalizedStatus = status.toString().toLowerCase().replace(/\s+/g, '_') as RequestStatus;
+    
+    switch (normalizedStatus) {
+      case RequestStatus.pending:
+        return "Đang chờ";
+      case RequestStatus.completed:
+        return "Hoàn thành";
+      case RequestStatus.rejected:
+        return "Bị từ chối";
+      case RequestStatus.result_returned:
+        return "Đã trả kết quả";
+      case RequestStatus.appointment_confirmed:
+        return "Đã xác nhận";
+      case RequestStatus.appointment_cancelled:
+        return "Đã bị hủy";
+      case RequestStatus.appointment_absent:
+        return "Vắng mặt";
+      case RequestStatus.customer_cancelled:
+        return "Đã hủy";
+      case RequestStatus.customer_checked_in:
+        return "Đã check-in";
+      default:
+        // Fallback: display the original status with proper formatting
+        return status.toString().replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
   };
 
   if (isLoading) {
@@ -98,7 +131,7 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
     );
   }
 
-  const currentConfig = statusConfig[donation.currentStatus!] || statusConfig[RequestStatus.pending];
+  const currentConfig = getStatusStyle(donation.currentStatus!) || getStatusStyle(RequestStatus.pending);
 
   return (
     <ScrollView 
@@ -116,7 +149,7 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
             </Text>
             <Badge className={`${currentConfig.bg} px-3 py-1 rounded-full`}>
               <BadgeText className={`${currentConfig.text} text-sm font-medium`}>
-                {currentConfig.label}
+                {getStatusDisplay(donation.currentStatus!)}
               </BadgeText>
             </Badge>
           </HStack>
@@ -133,14 +166,22 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
             </Text>
           </HStack>
 
-          {/* {donation.appointmentDate && (
+          <VStack space="md">
             <HStack className="items-center" space="sm">
-              <Icon as={ClockIcon} size="sm" className="text-red-500" />
+              
               <Text className="text-sm text-gray-600">
-                Lịch hẹn: {dayjs(donation.appointmentDate).format("DD/MM/YYYY HH:mm")}
+                Ngày hẹn: {dayjs(donation.appointmentDate).format("DD/MM/YYYY")}
               </Text>
             </HStack>
-          )} */}
+            {donation.note && (
+              <HStack className="items-center" space="sm">
+                <Icon as={Mail} size="sm" className="text-red-500" />
+                <Text className="text-sm text-gray-600">
+                  Ghi chú: {donation.note}
+                </Text>
+              </HStack>
+            )}
+          </VStack>
         </VStack>
       </Card>
 
@@ -238,11 +279,147 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
 
             {donation.donor.bloodType && (donation.donor.bloodType.group || donation.donor.bloodType.rh) && (
               <HStack className="items-center" space="sm">
-                <Icon as={UserIcon} size="sm" className="text-red-500" />
+                <Icon as={DropletIcon} size="sm" className="text-red-500" />
                 <Text className="text-sm text-gray-600">
                   Nhóm máu: {donation.donor.bloodType.group || "Chưa xác định"}{donation.donor.bloodType.rh || ""}
                 </Text>
               </HStack>
+            )}
+          </VStack>
+        </Card>
+      )}
+
+      {/* Donation Result Section */}
+      {(donation.currentStatus === RequestStatus.result_returned|| donation.currentStatus === RequestStatus.rejected) && (
+        <Card className="p-0 bg-white border border-outline-200 rounded-xl shadow-sm overflow-hidden">
+          {/* Result Header */}
+          <VStack space="xs" className="bg-gradient-to-r from-red-50 to-red-100 p-6 border-b border-gray-100">
+            <Text className="text-xl font-bold text-gray-900 text-center">
+              Kết quả hiến máu
+            </Text>
+            <Text className="text-sm text-gray-600 text-center mt-1">
+              Thông tin chi tiết về kết quả xét nghiệm và hiến máu
+            </Text>
+          </VStack>
+
+          <VStack space="lg" className="p-6">
+            {isResultLoading ? (
+              <VStack className="items-center justify-center py-8" space="md">
+                <Spinner size="large" className="text-red-500" />
+                <Text className="text-base text-gray-600 text-center">Đang tải kết quả...</Text>
+                <Text className="text-sm text-gray-500 text-center">Vui lòng đợi trong giây lát</Text>
+              </VStack>
+            ) : result ? (
+              <VStack space="lg">
+                {/* Status Card */}
+                <Card className={`p-4 border-2 ${result.status === "completed" ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"} rounded-lg`}>
+                  <VStack space="sm" className="items-center">
+                    <Text className="text-lg font-bold text-center">
+                      {result.status === "completed" ? "Hiến máu thành công" : "Hiến máu không thành công"}
+                    </Text>
+                    <Text className={`text-sm text-center ${result.status === "completed" ? "text-green-700" : "text-red-700"}`}>
+                      {result.status === "completed" 
+                        ? "Cảm ơn bạn đã hiến máu cứu người!" 
+                        : "Rất tiếc, yêu cầu hiến máu không được chấp nhận"}
+                    </Text>
+                  </VStack>
+                </Card>
+
+                {/* Result Details */}
+                <VStack space="md">
+                  {/* Volume (only show if completed) */}
+                  {result.status === "completed" && result.volumeMl && (
+                    <Card className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <VStack space="xs">
+                        <Text className="text-sm font-medium text-blue-800 uppercase tracking-wide">
+                          Thể tích máu hiến
+                        </Text>
+                        <Text className="text-2xl font-bold text-blue-900">
+                          {result.volumeMl} ml
+                        </Text>
+                        <Text className="text-xs text-blue-600">
+                          Lượng máu đã được thu thập thành công
+                        </Text>
+                      </VStack>
+                    </Card>
+                  )}
+
+                  {/* Blood type */}
+                  {result.bloodGroup && result.bloodRh && (
+                    <Card className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                      <VStack space="xs">
+                        <Text className="text-sm font-medium text-purple-800 uppercase tracking-wide">
+                          Nhóm máu được xác định
+                        </Text>
+                        <Text className="text-2xl font-bold text-purple-900">
+                          {result.bloodGroup}{result.bloodRh}
+                        </Text>
+                        <Text className="text-xs text-purple-600">
+                          Kết quả từ xét nghiệm máu
+                        </Text>
+                      </VStack>
+                    </Card>
+                  )}
+
+                  {/* Notes */}
+                  {result.notes && (
+                    <Card className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                      <VStack space="xs">
+                        <Text className="text-sm font-medium text-gray-800 uppercase tracking-wide">
+                          Ghi chú từ bác sĩ
+                        </Text>
+                        <Text className="text-base text-gray-900 leading-relaxed">
+                          {result.notes}
+                        </Text>
+                      </VStack>
+                    </Card>
+                  )}
+
+                  {/* Reject reason (only show if rejected) */}
+                  {result.status === "rejected" && result.rejectReason && (
+                    <Card className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                      <VStack space="xs">
+                        <Text className="text-sm font-medium text-red-800 uppercase tracking-wide">
+                          Lý do từ chối
+                        </Text>
+                        <Text className="text-base text-red-900 leading-relaxed">
+                          {result.rejectReason}
+                        </Text>
+                        <Text className="text-xs text-red-600 mt-2">
+                          Vui lòng tham khảo ý kiến bác sĩ để hiểu rõ hơn
+                        </Text>
+                      </VStack>
+                    </Card>
+                  )}
+                </VStack>
+
+                {/* Staff Information */}
+                {result.processedBy && (
+                  <Card className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    <VStack space="xs">
+                      <Text className="text-sm font-medium text-gray-800 uppercase tracking-wide">
+                        Nhân viên xử lý
+                      </Text>
+                      <Text className="text-lg font-semibold text-gray-900">
+                        {result.processedBy.firstName} {result.processedBy.lastName}
+                      </Text>
+                      <Text className="text-xs text-indigo-600">
+                        Bác sĩ/Kỹ thuật viên phụ trách
+                      </Text>
+                    </VStack>
+                  </Card>
+                )}
+              </VStack>
+            ) : (
+              <VStack className="items-center justify-center py-8" space="md">
+                <Text className="text-6xl">🔬</Text>
+                <Text className="text-lg font-medium text-gray-900 text-center">
+                  Chưa có kết quả hiến máu
+                </Text>
+                <Text className="text-sm text-gray-600 text-center max-w-sm">
+                  Kết quả xét nghiệm và hiến máu sẽ được cập nhật sau khi hoàn tất quá trình kiểm tra
+                </Text>
+              </VStack>
             )}
           </VStack>
         </Card>

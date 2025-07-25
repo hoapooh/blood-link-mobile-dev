@@ -4,10 +4,11 @@ export default function DonationLayout() {
   return (
     <Stack
       screenOptions={{
+        headerShown: true,
         headerStyle: {
-          backgroundColor: "#ef4444",
+          backgroundColor: "#fffafa",
         },
-        headerTintColor: "#fff",
+        headerTintColor: "#ef4444",
         headerTitleStyle: {
           fontWeight: "bold",
         },
