@@ -68,6 +68,19 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
     },
   };
 
+  const getStatusDisplay = (status: CampaignStatus): string => {
+    switch (status) {
+      case CampaignStatus.not_started:
+        return "Chưa bắt đầu";
+      case CampaignStatus.active:
+        return "Đang diễn ra";
+      case CampaignStatus.ended:
+        return "Đã kết thúc";
+      default:
+        return status;
+    }
+  };
+
   return (
     <Card className="border border-outline-200 rounded-xl bg-white shadow-sm w-full px-6 py-8">
       <VStack space="md">
@@ -83,7 +96,7 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
             <BadgeText
               className={`${statusColors[derivedStatus].text} text-xs font-medium`}
             >
-              {derivedStatus}
+              {getStatusDisplay(derivedStatus)}
             </BadgeText>
           </Badge>
         </HStack>

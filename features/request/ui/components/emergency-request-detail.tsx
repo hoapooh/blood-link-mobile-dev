@@ -10,13 +10,11 @@ import { useGetEmergencyRequestDetail } from "@/features/request/hooks";
 import dayjs from "dayjs";
 import {
   AlertCircleIcon,
-  CalendarDaysIcon,
   CheckCircleIcon,
   ClockIcon,
-  DropletIcon,
   MapPin,
   UserIcon,
-  X,
+  X
 } from "lucide-react-native";
 import React from "react";
 import { ScrollView } from "react-native";
@@ -152,30 +150,14 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
 
             {/* Dates */}
             <HStack className="items-center" space="sm">
-              <Icon as={CalendarDaysIcon} size="sm" className="text-red-500" />
               <Text className="text-sm text-gray-600">
                 {"Ngày tạo: " + dayjs(emergencyRequest.createdAt).format("DD/MM/YYYY HH:mm")}
               </Text>
             </HStack>
 
             <HStack className="items-center" space="sm">
-              <Icon as={CalendarDaysIcon} size="sm" className="text-red-500" />
               <Text className="text-sm text-gray-600">
                 {"Cập nhật lần cuối: " + dayjs(emergencyRequest.updatedAt).format("DD/MM/YYYY HH:mm")}
-              </Text>
-            </HStack>
-
-            <HStack className="items-center" space="sm">
-              <Icon as={ClockIcon} size="sm" className="text-red-500" />
-              <Text className="text-sm text-gray-600">
-                {"Thời gian bắt đầu: " + dayjs(emergencyRequest.startDate).format("DD/MM/YYYY HH:mm")}
-              </Text>
-            </HStack>
-
-            <HStack className="items-center" space="sm">
-              <Icon as={ClockIcon} size="sm" className="text-red-500" />
-              <Text className="text-sm text-gray-600">
-                {"Thời gian kết thúc: " + dayjs(emergencyRequest.endDate).format("DD/MM/YYYY HH:mm")}
               </Text>
             </HStack>
           </VStack>
@@ -206,25 +188,7 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
               </HStack>
             )}
 
-            {/* Blood Unit Information */}
-            {emergencyRequest.bloodUnit && (
-              <HStack className="items-center" space="sm">
-                <Icon as={DropletIcon} size="sm" className="text-red-500" />
-                <Text className="text-sm text-gray-600">
-                  {"Đơn vị máu: " + emergencyRequest.bloodUnit}
-                </Text>
-              </HStack>
-            )}
-
-            {/* Coordinates */}
-            {emergencyRequest.latitude && emergencyRequest.longitude && (
-              <HStack className="items-center" space="sm">
-                <Icon as={MapPin} size="sm" className="text-red-500" />
-                <Text className="text-sm text-gray-600">
-                  {"Tọa độ: " + emergencyRequest.latitude + ", " + emergencyRequest.longitude}
-                </Text>
-              </HStack>
-            )}
+            
           </VStack>
         </Card>
 

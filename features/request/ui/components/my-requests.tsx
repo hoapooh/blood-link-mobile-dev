@@ -155,7 +155,7 @@ const MyRequests = () => {
 											 request.status === "rejected" ? "Bị từ chối" : request.status}
 										</BadgeText>
 									</Badge>
-									<Icon as={statusInfo.icon} size="sm" className={statusInfo.iconColor} />
+									
 								</VStack>
 							</HStack>
 
@@ -189,8 +189,7 @@ const MyRequests = () => {
 								</VStack>
 							)}
 
-							{/* Action buttons based on status */}
-							{request.status === "pending" && (
+							
 								<HStack className="pt-2" space="md">
 									<Button
 										variant="outline"
@@ -203,37 +202,7 @@ const MyRequests = () => {
 										<ButtonText>Xem chi tiết</ButtonText>
 									</Button>
 								</HStack>
-							)}
-
-							{request.status === "approved" && (
-								<VStack className="pt-2" space="sm">
-									<Button
-										variant="solid"
-										action="primary"
-										className="w-full bg-green-500"
-										onPress={() => {
-											// Handle view collection details
-											console.log("Viewing collection details for request:", request.id);
-										}}
-									>
-										<ButtonText className="text-white">Xem chi tiết thu thập</ButtonText>
-									</Button>
-								</VStack>
-							)}
-
-							{request.status === "rejected" && (
-								<Button
-									variant="outline"
-									action="secondary"
-									className="w-full"
-									onPress={() => {
-										// Handle create new request
-										console.log("Creating new request similar to:", request.id);
-									}}
-								>
-									<ButtonText>Tạo yêu cầu mới</ButtonText>
-								</Button>
-							)}
+							
 						</VStack>
 					</Card>
 				);

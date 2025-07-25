@@ -18,6 +18,23 @@ export interface IBloodType {
   rh: string;
 }
 
+export interface IBloodUnit {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  member: string;
+  bloodType: {
+    group: string;
+    rh: string;
+  };
+  bloodVolume: number;
+  bloodComponentType: string;
+  remainingVolume: number;
+  isSeparated: boolean;
+  parentWholeBlood: string;
+  expiredDate: string;
+  status: string;
+}
 
 export interface IEmergencyRequestData {
   id: string;
@@ -25,7 +42,7 @@ export interface IEmergencyRequestData {
   usedVolume?: number;
   bloodType: IBloodType;
   bloodTypeComponent: BloodTypeComponent;
-  bloodUnit?: string | null;
+  bloodUnit?: IBloodUnit | null;
   status: EmergencyRequestStatus;
   description: string;
   rejectionReason: string | null;

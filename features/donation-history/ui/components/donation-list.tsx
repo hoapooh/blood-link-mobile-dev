@@ -51,7 +51,6 @@ const DonationList = () => {
       </Text>
       <VStack space="xl">
         {data?.map((request: IDonationRequestData) => (
-            
           <DonationRequestCard
             key={request.id || Math.random().toString()}
             request={request}

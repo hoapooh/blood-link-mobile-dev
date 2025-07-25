@@ -11,13 +11,13 @@ import { useGetProfile } from "@/features/profile/hooks";
 import { RequestStatus } from "@/interfaces/donation-request";
 import dayjs from "dayjs";
 import {
-    CalendarDaysIcon,
-    ClockIcon,
-    IdCardIcon,
-    Mail,
-    MapPin,
-    PhoneIcon,
-    UserIcon,
+  CalendarDaysIcon,
+  ClockIcon,
+  IdCardIcon,
+  Mail,
+  MapPin,
+  PhoneIcon,
+  UserIcon,
 } from "lucide-react-native";
 import React from "react";
 import { Image, ScrollView } from "react-native";
@@ -122,27 +122,25 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
           </HStack>
           
           <HStack className="items-center" space="sm">
-            <Icon as={CalendarDaysIcon} size="sm" className="text-red-500" />
             <Text className="text-sm text-gray-600">
               Ngày tạo: {dayjs(donation.createdAt).format("DD/MM/YYYY HH:mm")}
             </Text>
           </HStack>
 
           <HStack className="items-center" space="sm">
-            <Icon as={CalendarDaysIcon} size="sm" className="text-red-500" />
             <Text className="text-sm text-gray-600">
               Cập nhật lần cuối: {dayjs(donation.updatedAt).format("DD/MM/YYYY HH:mm")}
             </Text>
           </HStack>
 
-          {donation.appointmentDate && (
+          {/* {donation.appointmentDate && (
             <HStack className="items-center" space="sm">
               <Icon as={ClockIcon} size="sm" className="text-red-500" />
               <Text className="text-sm text-gray-600">
                 Lịch hẹn: {dayjs(donation.appointmentDate).format("DD/MM/YYYY HH:mm")}
               </Text>
             </HStack>
-          )}
+          )} */}
         </VStack>
       </Card>
 
