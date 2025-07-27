@@ -47,18 +47,7 @@ const TabsLayout = () => {
 					tabBarIcon: ({ color }) => <Ionicons name="home" size={26} color={color} />,
 				}}
 			/>
-			<Tabs.Screen
-				name="near-by"
-				options={{
-					title: "Gần đây",
-					headerTitle: "Tìm kiếm gần đây",
-					headerTitleAlign: "left",
-					headerShown: true,
-					tabBarIcon: ({ color }) => (
-						<MaterialCommunityIcons name="near-me" size={24} color={color} />
-					),
-				}}
-			/>
+			
 			<Tabs.Screen
 				name="blood-search"
 				options={{
@@ -76,6 +65,18 @@ const TabsLayout = () => {
 					headerTitleAlign: "left",
 					tabBarIcon: ({ color }) => (
 						<MaterialCommunityIcons name="form-select" size={26} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="near-by"
+				options={{
+					title: "Gần đây",
+					headerTitle: "Tìm kiếm gần đây",
+					headerTitleAlign: "left",
+					headerShown: true,
+					tabBarIcon: ({ color }) => (
+						<MaterialCommunityIcons name="near-me" size={24} color={color} />
 					),
 				}}
 			/>

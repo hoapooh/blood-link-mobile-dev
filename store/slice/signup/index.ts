@@ -14,6 +14,7 @@ export interface Page2Data {
 }
 
 export interface LocationData {
+	address?: string;
 	provinceCode?: string;
 	provinceName?: string;
 	districtCode?: string;

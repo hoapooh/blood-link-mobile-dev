@@ -7,15 +7,6 @@ import BannerImage from "../components/BannerImage";
 import CampaignDetailSection from "../components/campaign-detail-content";
 import DonationRequestModal from "../components/registration-form";
 
-interface RegistrationData {
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  bloodType: string;
-  phoneNumber: string;
-  email: string;
-}
-
 export default function CampaignDetail() {
   const { id } = useLocalSearchParams();
   const { campaign, isLoading, isError, error, refetch } = useGetCampaignById(
@@ -61,7 +52,7 @@ export default function CampaignDetail() {
         />
         <CampaignDetailSection
           campaign={campaign}
-          enrolled={0}
+          enrolled={campaign.statistics?.totalDonations || 0}
           onRegisterClick={handleRegistration}
         />
         <DonationRequestModal

@@ -16,13 +16,25 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@/components/ui/modal";
+import {
+  Select,
+  SelectBackdrop,
+  SelectContent,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectIcon,
+  SelectInput,
+  SelectItem,
+  SelectPortal,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useGetProfile } from "@/features/profile/hooks";
 import { ICampaignData } from "@/interfaces/campaign";
 import { useAuthStore } from "@/store/slice/auth/auth-store";
 import dayjs from "dayjs";
-import { X } from "lucide-react-native";
+import { ChevronDownIcon, X } from "lucide-react-native";
 import React, { useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import useCreateDonationRequest from "../../hooks/use-create-request";
@@ -48,6 +60,13 @@ const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
   >(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [note, setNote] = useState<string>("");
+  const [volumeMl, setVolumeMl] = useState<string>("250"); // Default to 250ml
+
+  // Generate volume options from 200 to 500 with 50ml gaps
+  const volumeOptions = Array.from({ length: 7 }, (_, i) => {
+    const value = 200 + (i * 50);
+    return { label: `${value} ml`, value: value.toString() };
+  });
 
   const getFullAddress = () => {
     const parts = [
@@ -66,6 +85,7 @@ const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
         campaignId: campaign.id,
         appointmentDate: campaign.bloodCollectionDate,
         note: note || "",
+        volumeMl: parseInt(volumeMl),
       });
       setSubmissionResult("success");
     } catch (error) {
@@ -265,6 +285,30 @@ const DonationRequestModal: React.FC<DonationRequestModalProps> = ({
                         onChangeText={setNote}
                       />
                     </Input>
+                  </VStack>
+                  <VStack className="space-y-2 pb-4">
+                    <Text className="text-sm">Thể tích máu dự kiến hiến</Text>
+                    <Select selectedValue={volumeMl} onValueChange={setVolumeMl}>
+                      <SelectTrigger variant="outline" size="md">
+                        <SelectInput placeholder="Chọn thể tích máu" />
+                        <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                      </SelectTrigger>
+                      <SelectPortal>
+                        <SelectBackdrop />
+                        <SelectContent>
+                          <SelectDragIndicatorWrapper>
+                            <SelectDragIndicator />
+                          </SelectDragIndicatorWrapper>
+                          {volumeOptions.map((option) => (
+                            <SelectItem
+                              key={option.value}
+                              label={option.label}
+                              value={option.value}
+                            />
+                          ))}
+                        </SelectContent>
+                      </SelectPortal>
+                    </Select>
                   </VStack>
                 </VStack>
 

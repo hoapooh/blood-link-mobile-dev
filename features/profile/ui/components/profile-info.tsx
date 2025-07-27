@@ -128,7 +128,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, isLoading }) => {
 	};
 
 	const getFullAddress = () => {
-		const parts = [user?.data?.wardName, user?.data?.districtName, user?.data?.provinceName].filter(
+		const parts = [user?.data?.address,user?.data?.wardName, user?.data?.districtName, user?.data?.provinceName].filter(
 			Boolean
 		);
 		return parts.length > 0 ? parts.join(", ") : null;
@@ -257,6 +257,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ user, isLoading }) => {
 				onClose={() => setIsLocationDialogOpen(false)}
 				onSave={handleLocationUpdate}
 				initialLocation={getInitialLocation()}
+				initialAddress={user?.data?.address || ""}
 			/>
 			<PersonalInfoEditDialog
 				isOpen={isPersonalInfoDialogOpen}

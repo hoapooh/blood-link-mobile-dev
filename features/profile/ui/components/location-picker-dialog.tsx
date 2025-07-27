@@ -1,6 +1,7 @@
 import { Button, ButtonText } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { ChevronDownIcon, CloseIcon, Icon } from "@/components/ui/icon";
+import { Input, InputField } from "@/components/ui/input";
 import {
 	Modal,
 	ModalBackdrop,
@@ -24,7 +25,6 @@ import {
 	SelectTrigger,
 } from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
-import { useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { IDistrictItem, IProvinceItem, IWardItem } from "@/interfaces/location";
 import { IUserUpdate } from "@/interfaces/user";
@@ -40,6 +40,7 @@ interface LocationPickerDialogProps {
 		district?: IDistrictItem;
 		ward?: IWardItem;
 	};
+	initialAddress?: string;
 }
 
 const LocationPickerDialog: React.FC<LocationPickerDialogProps> = ({
@@ -47,8 +48,9 @@ const LocationPickerDialog: React.FC<LocationPickerDialogProps> = ({
 	onClose,
 	onSave,
 	initialLocation,
+	initialAddress = "",
 }) => {
-	const toast = useToast();
+	const [address, setAddress] = React.useState(initialAddress);
 	const {
 		provinces,
 		districts,
@@ -59,7 +61,6 @@ const LocationPickerDialog: React.FC<LocationPickerDialogProps> = ({
 		handleProvinceSelect,
 		handleDistrictSelect,
 		handleWardSelect,
-		resetSelection,
 		provincesLoading,
 		districtsLoading,
 		wardsLoading,
@@ -70,6 +71,10 @@ const LocationPickerDialog: React.FC<LocationPickerDialogProps> = ({
 	} = useLocationPicker(initialLocation);
 
 	// Reset when dialog opens
+	React.useEffect(() => {
+		setAddress(initialAddress);
+	}, [initialAddress]);
+
 	/* useEffect(() => {
 		if (isOpen && !initialLocation) {
 			resetSelection();
@@ -87,20 +92,10 @@ const LocationPickerDialog: React.FC<LocationPickerDialogProps> = ({
 				wardName: selectedWard.name,
 				longitude: selectedWard.longitude,
 				latitude: selectedWard.latitude,
+				address: address.trim() || null,
 			};
 			onSave(locationData);
 			onClose();
-			// toast.show({
-			// 	placement: "bottom",
-			// 	containerStyle: {
-			// 		marginBottom: 60,
-			// 	},
-			// 	render: ({ id }) => (
-			// 		<Toast nativeID={id} variant="solid" action="success">
-			// 			<ToastTitle>Location saved successfully!</ToastTitle>
-			// 		</Toast>
-			// 	),
-			// });
 		}
 	};
 
@@ -120,7 +115,7 @@ const LocationPickerDialog: React.FC<LocationPickerDialogProps> = ({
 			<ModalBackdrop />
 			<ModalContent className="max-w-md">
 				<ModalHeader>
-					<Heading size="lg">Chọn địa điểm</Heading>
+					<Heading size="lg">Nhập địa điểm</Heading>
 					<ModalCloseButton>
 						<Icon as={CloseIcon} />
 					</ModalCloseButton>
@@ -256,11 +251,29 @@ const LocationPickerDialog: React.FC<LocationPickerDialogProps> = ({
 							</Select>
 							{renderError(wardsError, "Failed to load wards")}
 						</VStack>
+
+						{/* Address Field */}
+						<VStack space="xs">
+							<Text className="font-medium">Địa chỉ chi tiết (Số nhà, tên đường)</Text>
+							<Input variant="outline" size="xl">
+								<InputField
+									placeholder="Nhập số nhà, tên đường..."
+									value={address}
+									onChangeText={setAddress}
+									maxLength={200}
+								/>
+							</Input>
+							<Text className="text-xs text-gray-500">
+								Tối đa 200 ký tự ({address.length}/200)
+							</Text>
+						</VStack>
+
 						{/* Selected Summary */}
 						{isComplete && (
 							<VStack space="xs" className="bg-green-50 p-3 rounded-lg border border-green-200">
 								<Text className="font-medium text-green-800">Địa điểm đã chọn:</Text>
 								<Text className="text-green-700 text-sm">
+									{address && `${address}, `}
 									{selectedWard?.name}, {selectedDistrict?.name}, {selectedProvince?.name}
 								</Text>
 							</VStack>

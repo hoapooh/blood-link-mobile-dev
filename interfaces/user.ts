@@ -24,6 +24,7 @@ export interface IUserData {
 	citizenId: string | null;
 	longitude: string | null;
 	latitude: string | null;
+	address: string | null;
 	wardCode: string | null;
 	districtCode: string | null;
 	provinceCode: string | null;
@@ -44,6 +45,7 @@ export interface IUserUpdate {
 	citizenId?: string | null;
 	longitude?: string | null;
 	latitude?: string | null;
+	address?: string | null;
 	wardCode?: string | null;
 	districtCode?: string | null;
 	provinceCode?: string | null;

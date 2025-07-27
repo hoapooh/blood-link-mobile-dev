@@ -1,7 +1,7 @@
 import { Box } from "@/components/ui/box";
 import React from "react";
 import { ScrollView } from "react-native";
-import DonationList from "../components/donation-list";
+import DonationSearchLayout from "../components/donation-search-layout";
 
 export default function DonationHistoryPage() {
   return (
@@ -10,7 +10,7 @@ export default function DonationHistoryPage() {
 
         {/* List section */}
         <Box className="flex-1 px-4 pb-4 min-h-0">
-          <DonationList />
+          <DonationSearchLayout />
         </Box>
       </ScrollView>
     </Box>

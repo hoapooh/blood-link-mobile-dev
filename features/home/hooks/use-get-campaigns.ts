@@ -4,7 +4,12 @@ import { campaignApi } from './../../../services/campaign-api';
 
 import { useQuery } from "@tanstack/react-query";
 
-const useGetCampaigns = () => {
+interface UseGetCampaignsParams {
+    search?: string;
+    status?: string;
+}
+
+const useGetCampaigns = (params?: UseGetCampaignsParams) => {
 
     const {
         data,
@@ -13,8 +18,8 @@ const useGetCampaigns = () => {
         error,
         refetch,
     } = useQuery({
-        queryFn: () => campaignApi.getAllCampaign(),
-        queryKey: ["campaigns"],
+        queryFn: () => campaignApi.getAllCampaign(params),
+        queryKey: ["campaigns", params],
         staleTime: 5 * 60 * 1000, // 5 minutes
         retry: (failureCount, error: any) => {
 			return failureCount < 3;

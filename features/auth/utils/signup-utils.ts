@@ -13,10 +13,11 @@ export const formatDateOfBirth = (text: string): string => {
 };
 
 export const formatLocationAddress = (location: {
+	address?: string;
 	wardName?: string;
 	districtName?: string;
 	provinceName?: string;
 }): string => {
-	const { wardName, districtName, provinceName } = location;
-	return `${wardName}, ${districtName}, ${provinceName}`;
+	const { address, wardName, districtName, provinceName } = location;
+	return `${address} ${wardName}, ${districtName}, ${provinceName}`;
 };

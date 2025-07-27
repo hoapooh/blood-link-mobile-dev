@@ -5,9 +5,12 @@ import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import useGetDonationHistory from "@/features/donation-history/hooks/use-get-donation-history";
 import { CampaignStatus, ICampaignData } from "@/interfaces/campaign";
+import { RequestStatus } from "@/interfaces/donation-request";
 import dayjs from "dayjs";
 import {
+  AlertCircle,
   AlertTriangle,
   CalendarDaysIcon,
   CheckCircle2,
@@ -19,7 +22,7 @@ import {
   Phone,
   UsersIcon,
 } from "lucide-react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 interface CampaignDetailSectionProps {
   campaign: ICampaignData;
@@ -43,6 +46,25 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
     status,
   } = campaign;
 
+  // Get user's donation history to check for active donations
+  const { data: donationHistory, isLoading: isLoadingHistory } = useGetDonationHistory();
+  
+  // Add timeout state to prevent indefinite loading
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+
+  // Set a timeout to allow button interaction even if history is still loading
+  useEffect(() => {
+    if (isLoadingHistory) {
+      const timer = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 3000); // 3 second timeout
+
+      return () => clearTimeout(timer);
+    } else {
+      setLoadingTimeout(false);
+    }
+  }, [isLoadingHistory]);
+
   const start = dayjs(startDate);
   const end = dayjs(endDate);
   const collectionDate = dayjs(bloodCollectionDate);
@@ -52,6 +74,23 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
   if (now.isBefore(start)) derivedStatus = CampaignStatus.not_started;
   else if (now.isAfter(end)) derivedStatus = CampaignStatus.ended;
   else derivedStatus = CampaignStatus.active;
+
+  // Check for active donation requests that should block registration
+  const activeBlockingStatuses = [
+    RequestStatus.completed,
+    RequestStatus.appointment_confirmed,
+    RequestStatus.customer_checked_in,
+  ];
+
+  // Only check for active donations if we have data or if we've timed out
+  const hasActiveDonation = (donationHistory && donationHistory.length > 0) 
+    ? donationHistory.some(donation =>
+        donation.currentStatus && activeBlockingStatuses.includes(donation.currentStatus)
+      )
+    : false;
+
+  // Determine if we should show loading state (only for first 3 seconds)
+  const shouldShowLoading = isLoadingHistory && !loadingTimeout;
 
   const statusColors: Record<CampaignStatus, { bg: string; text: string }> = {
     [CampaignStatus.not_started]: {
@@ -88,7 +127,7 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
         <HStack className="justify-between items-start">
           <VStack className="flex-1 pr-2">
             <Text className="text-lg font-bold text-red-600">{name}</Text>
-            <Text className="text-sm text-typography-700">{description}</Text>
+            <Text className="text-md text-typography-700">{description}</Text>
           </VStack>
           <Badge
             className={`${statusColors[derivedStatus].bg} px-3 py-1 rounded-full`}
@@ -144,19 +183,25 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
         >
           <HStack>
             <Icon as={AlertTriangle} size="md" className="text-yellow-600 mr-2" />
-            <Text className="text-md font-bold text-yellow-700">
+            <Text className="text-lg font-bold text-yellow-700">
               Lưu ý trước khi hiến máu
             </Text>
           </HStack>
           <VStack space="xs">
             <Text className="text-sm text-yellow-800">
-              • Không nên hiến máu khi bạn đang bị sốt hoặc cảm cúm.
+              • Đêm trước hiến máu không nên thức quá khuya (ngủ ít nhất 6 tiếng).
             </Text>
             <Text className="text-sm text-yellow-800">
-              • Hãy đảm bảo bạn đã ăn uống đầy đủ trước khi hiến máu.
+              • Nên ăn nhẹ, KHÔNG ăn các đồ ăn có nhiều đạm, nhiều mỡ.
             </Text>
             <Text className="text-sm text-yellow-800">
-              • Tránh uống rượu bia ít nhất 24 giờ trước khi hiến máu.
+              • KHÔNG uống rượu, bia.
+            </Text>
+             <Text className="text-sm text-yellow-800">
+              • Chuẩn bị tâm lý thực sự thoải mái.
+            </Text>
+            <Text className="text-sm text-yellow-800">
+              • Mang theo giấy tờ tùy thân.
             </Text>
             <Text className="text-sm text-yellow-800">
               • Nếu bạn đang dùng thuốc hoặc có bệnh lý, hãy hỏi ý kiến bác sĩ
@@ -198,7 +243,7 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
             <HStack space="sm" className="items-center">
               <Icon as={CheckCircle2} size="sm" className="text-red-500" />
               <Text className="text-base text-typography-700">
-                Cảm thấy tự hào vì đã cứu giúp người khác
+                Được ưu tiên khi cần máu trong trường hợp khẩn cấp
               </Text>
             </HStack>
           </VStack>
@@ -226,19 +271,49 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
             </Text>
           </HStack>
         </VStack>
+        
+        {/* Active donation warning card */}
+        {hasActiveDonation && (
+          <VStack
+            space="sm"
+            className="bg-red-100 rounded-md p-4 border border-red-200"
+          >
+            <HStack className="items-center space-x-2">
+              <Icon as={AlertCircle} size="sm" className="text-red-600 mr-2" />
+              <Text className="text-lg font-semibold text-red-700">
+                Thông báo quan trọng
+              </Text>
+            </HStack>
+            <Text className="text-sm text-red-600">
+              Bạn hiện tại đang có yêu cầu hiến máu đang hoạt động. Vui lòng hoàn thành 
+              quá trình hiến máu hiện tại trước khi đăng ký chiến dịch mới.
+            </Text>
+          </VStack>
+        )}
+
         {/* Register Button */}
         <Button
           variant="solid"
           action="primary"
           className="bg-red-500 mt-2"
           isDisabled={
-            derivedStatus === CampaignStatus.ended || enrolled >= limitDonation
+            derivedStatus === CampaignStatus.ended || 
+            enrolled >= limitDonation || 
+            derivedStatus === CampaignStatus.not_started ||
+            hasActiveDonation ||
+            shouldShowLoading
           }
           onPress={onRegisterClick}
         >
           <ButtonText className="text-white">
-            {derivedStatus === CampaignStatus.ended
+            {shouldShowLoading
+              ? "Đang kiểm tra..."
+              : hasActiveDonation
+              ? "Bạn đã có yêu cầu đang hoạt động"
+              : derivedStatus === CampaignStatus.ended
               ? "Chiến dịch đã kết thúc"
+              : derivedStatus === CampaignStatus.not_started
+              ? "Chiến dịch chưa bắt đầu"
               : enrolled >= limitDonation
               ? "Đã đủ người"
               : "Đăng ký ngay"}

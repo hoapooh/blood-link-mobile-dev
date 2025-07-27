@@ -1,23 +1,39 @@
+import {
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader
+} from "@/components/ui/alert-dialog";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
+import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { useGetEmergencyRequestDetail } from "@/features/request/hooks";
+import { useDeleteEmergencyRequest, useGetEmergencyRequestDetail, useUpdateEmergencyRequest } from "@/features/request/hooks";
+import { UpdateEmergencyRequestDto } from "@/interfaces/emergency-request";
 import dayjs from "dayjs";
 import {
   AlertCircleIcon,
   CheckCircleIcon,
   ClockIcon,
+  DropletIcon,
+  EditIcon,
+  Mail,
   MapPin,
+  PhoneIcon,
+  Trash2Icon,
   UserIcon,
   X
 } from "lucide-react-native";
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView } from "react-native";
+import BloodRequestForm from "./blood-request-form";
 
 interface EmergencyRequestDetailProps {
   requestId: string;
@@ -25,6 +41,34 @@ interface EmergencyRequestDetailProps {
 
 const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ requestId }) => {
   const { emergencyRequest, isLoading, isError, error } = useGetEmergencyRequestDetail(requestId);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const updateEmergencyRequest = useUpdateEmergencyRequest();
+  const deleteEmergencyRequest = useDeleteEmergencyRequest();
+
+  const handleUpdate = async (updateData: UpdateEmergencyRequestDto) => {
+    try {
+      await updateEmergencyRequest.updateEmergencyRequest({
+        id: requestId,
+        data: updateData,
+      });
+      setShowUpdateModal(false);
+    } catch (error) {
+      // Error is handled by the mutation
+      console.error('Update failed:', error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteEmergencyRequest.deleteEmergencyRequest({ id: requestId });
+      setShowDeleteDialog(false);
+      // Navigate back or show success message
+      // You might want to add navigation logic here
+    } catch (error) {
+      console.error('Delete failed:', error);
+    }
+  };
   const getStatusInfo = (status: string) => {
     switch (status) {
       case "approved":
@@ -47,6 +91,20 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
           text: "text-red-700",
           label: "Bị từ chối",
           icon: X,
+        };
+      case "contacts_provided":
+        return {
+          bg: "bg-blue-100",
+          text: "text-blue-700",
+          label: "Đã cung cấp danh bạ",
+          icon: CheckCircleIcon,
+        };
+      case "expired":
+        return {
+          bg: "bg-gray-100",
+          text: "text-gray-700",
+          label: "Đã hết hạn",
+          icon: ClockIcon,
         };
       default:
         return {
@@ -163,6 +221,7 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
           </VStack>
         </Card>
 
+        
         {/* Request Information */}
         <Card className="p-6 bg-white border border-outline-200 rounded-xl shadow-sm">
           <VStack space="md">
@@ -206,6 +265,63 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
           </Card>
         )}
 
+        {/* Suggested Contacts */}
+        {emergencyRequest.suggestedContacts && emergencyRequest.status === "contacts_provided" && (
+          <Card className="p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-sm">
+            <VStack space="md">
+              <HStack className="items-center" space="sm">
+                <Icon as={UserIcon} size="sm" className="text-blue-600" />
+                <Text className="text-lg font-bold text-blue-700">
+                  Danh bạ người hiến máu phù hợp
+                </Text>
+              </HStack>
+              <Text className="text-sm text-blue-600 mb-4">
+                Hệ thống đã tìm thấy {emergencyRequest.suggestedContacts.length} người hiến máu phù hợp:
+              </Text>
+              
+              <VStack space="md">
+                {emergencyRequest.suggestedContacts.map((contact, index) => (
+                  <Card key={contact.id} className="p-4 bg-white border border-blue-100 rounded-lg">
+                    <VStack space="sm">
+                      {/* Name and Blood Type */}
+                      <HStack className="justify-between items-center">
+                        <HStack className="items-center" space="sm">
+                          <Icon as={UserIcon} size="sm" className="text-blue-500" />
+                          <Text className="font-semibold text-gray-900">
+                            {contact.firstName} {contact.lastName}
+                          </Text>
+                        </HStack>
+                        <HStack className="items-center bg-red-100 px-2 py-1 rounded-full" space="xs">
+                          <Icon as={DropletIcon} size="xs" className="text-red-600" />
+                          <Text className="text-red-600 font-bold text-sm">
+                            {contact.bloodType.group}{contact.bloodType.rh}
+                          </Text>
+                        </HStack>
+                      </HStack>
+                      
+                      {/* Contact Information */}
+                      <VStack space="xs">
+                        <HStack className="items-center" space="sm">
+                          <Icon as={PhoneIcon} size="xs" className="text-gray-500" />
+                          <Text className="text-sm text-gray-700">
+                            {contact.phone}
+                          </Text>
+                        </HStack>
+                        <HStack className="items-center" space="sm">
+                          <Icon as={Mail} size="xs" className="text-gray-500" />
+                          <Text className="text-sm text-gray-700">
+                            {contact.email}
+                          </Text>
+                        </HStack>
+                      </VStack>
+                    </VStack>
+                  </Card>
+                ))}
+              </VStack>
+            </VStack>
+          </Card>
+        )}
+
         {/* Rejection Reason */}
         {emergencyRequest.rejectionReason && emergencyRequest.status === "rejected" && (
           <Card className="p-6 bg-red-50 border border-red-200 rounded-xl shadow-sm">
@@ -223,6 +339,77 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
           </Card>
         )}
       </VStack>
+        {/* Action Buttons - Only visible for pending requests */}
+        {emergencyRequest.status === "pending" && (
+          <VStack space="sm">
+            <Button
+              onPress={() => setShowUpdateModal(true)}
+              className="mt-4 bg-white rounded-xl border border-red-300"
+            >
+              <Icon as={EditIcon} size="sm" className="text-red-600 mr-2" />
+              <ButtonText className="text-red-600 font-medium">
+                Cập nhật yêu cầu
+              </ButtonText>
+            </Button>
+            
+            <Button
+              onPress={() => setShowDeleteDialog(true)}
+              className="bg-red-600 rounded-xl"
+            >
+              <Icon as={Trash2Icon} size="sm" className="text-white mr-2" />
+              <ButtonText className="text-white font-medium">
+                Xóa yêu cầu
+              </ButtonText>
+            </Button>
+          </VStack>
+        )}
+
+      {/* Update Form Modal */}
+      <BloodRequestForm
+        isOpen={showUpdateModal}
+        onClose={() => setShowUpdateModal(false)}
+        onSubmit={handleUpdate}
+        isLoading={updateEmergencyRequest.isLoading}
+        mode="update"
+        initialData={emergencyRequest}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog isOpen={showDeleteDialog} onClose={() => setShowDeleteDialog(false)}>
+        <AlertDialogBackdrop />
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <Text className="text-lg font-bold text-gray-900">
+              Xác nhận xóa yêu cầu
+            </Text>
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            <Text className="text-gray-700">
+              Bạn có chắc chắn muốn xóa yêu cầu máu khẩn cấp này không? Hành động này không thể hoàn tác.
+            </Text>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <HStack space="sm" className="w-full">
+              <Button
+                variant="outline"
+                onPress={() => setShowDeleteDialog(false)}
+                className="flex-1"
+              >
+                <ButtonText className="text-gray-600">Hủy</ButtonText>
+              </Button>
+              <Button
+                onPress={handleDelete}
+                isDisabled={deleteEmergencyRequest.isLoading}
+                className="bg-red-600 flex-1"
+              >
+                <ButtonText className="text-white">
+                  {deleteEmergencyRequest.isLoading ? "Đang xóa..." : "Xóa"}
+                </ButtonText>
+              </Button>
+            </HStack>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ScrollView>
   );
 };

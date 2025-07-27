@@ -2,10 +2,10 @@ import { isAxiosError } from "axios";
 
 import axiosInstance from "@/config/axios-instance";
 import {
-  IUser,
-  IUserFindNearBy,
-  IUserFindNearByParams,
-  IUserUpdate,
+    IUser,
+    IUserFindNearBy,
+    IUserFindNearByParams,
+    IUserUpdate,
 } from "@/interfaces/user";
 
 export const authApi = {
@@ -23,7 +23,7 @@ export const authApi = {
 
 	updateCurrentProfile: async (data: IUserUpdate) => {
 		try {
-			const response = await axiosInstance.patch("/customers/me", data);
+			const response = await axiosInstance.put("/customers/me", data);
 			return response.data;
 		} catch (error) {
 			if (isAxiosError(error)) {
