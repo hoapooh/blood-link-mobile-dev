@@ -87,8 +87,8 @@ const PersonalInfoEditDialog: React.FC<PersonalInfoEditDialogProps> = ({
 	
 	// Validation functions
 	const validateVietnamesePhone = (value: string): boolean => {
-		// Vietnamese phone number format: 10 digits starting with 0
-		const phoneRegex = /^(0[3|5|7|8|9])[0-9]{8}$/;
+		// Vietnamese phone number format: starts with 0 and contains exactly 10 digits
+		const phoneRegex = /^0\d{9}$/;
 		const isValid = phoneRegex.test(value);
 		setPhoneError(isValid || value === "" ? "" : "Số điện thoại không hợp lệ");
 		return isValid || value === "";

@@ -7,7 +7,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { IDonationRequestData, RequestStatus } from "@/interfaces/donation-request";
 import dayjs from "dayjs";
-import { CalendarDaysIcon, ClockIcon, MapPin } from "lucide-react-native";
+import { CalendarDaysIcon, ClockIcon, DropletIcon, MapPin } from "lucide-react-native";
 
 interface DonationRequestCardProps {
   request: IDonationRequestData;
@@ -15,17 +15,9 @@ interface DonationRequestCardProps {
 }
 
 const statusStyles: Record<RequestStatus, { bg: string; text: string }> = {
-  [RequestStatus.pending]: {
-    bg: "bg-yellow-100",
-    text: "text-yellow-600",
-  },
   [RequestStatus.completed]: {
     bg: "bg-green-100",
     text: "text-green-600",
-  },
-  [RequestStatus.rejected]: {
-    bg: "bg-red-100",
-    text: "text-red-600",
   },
   [RequestStatus.result_returned]: {
     bg: "bg-blue-100",
@@ -51,6 +43,14 @@ const statusStyles: Record<RequestStatus, { bg: string; text: string }> = {
     bg: "bg-blue-100",
     text: "text-blue-600",
   },
+  [RequestStatus.not_qualified]: {
+    bg: "bg-red-100",
+    text: "text-red-600",
+  },
+  [RequestStatus.no_show_after_checkin]: {
+    bg: "bg-orange-100",
+    text: "text-orange-600",
+  },
 };
 
 const getStatusStyle = (status: RequestStatus) => {
@@ -68,12 +68,8 @@ const getStatusDisplay = (status: RequestStatus): string => {
   const normalizedStatus = status.toString().toLowerCase().replace(/\s+/g, '_') as RequestStatus;
   
   switch (normalizedStatus) {
-    case RequestStatus.pending:
-      return "Đang chờ";
     case RequestStatus.completed:
       return "Hoàn thành";
-    case RequestStatus.rejected:
-      return "Bị từ chối";
     case RequestStatus.result_returned:
       return "Đã trả kết quả";
     case RequestStatus.appointment_confirmed:
@@ -86,6 +82,10 @@ const getStatusDisplay = (status: RequestStatus): string => {
       return "Đã hủy";
     case RequestStatus.customer_checked_in:
       return "Đã check-in";
+    case RequestStatus.not_qualified:
+      return "Không đủ điều kiện";
+    case RequestStatus.no_show_after_checkin:
+      return "Không hiến máu";
     default:
       // Fallback: display the original status with proper formatting
       return status.toString().replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -96,9 +96,6 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({ request, onVi
   const { campaign, currentStatus, createdAt } = request;
 
   const campaignTime = "07:30 → 16:30";
-  const collectionDate = campaign?.bloodCollectionDate
-    ? dayjs(campaign.bloodCollectionDate).format("DD/MM/YYYY")
-    : "-";
   const submissionDate = createdAt ? dayjs(createdAt).format("DD/MM/YYYY") : "-";
 
   return (
@@ -150,6 +147,16 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({ request, onVi
           <Icon as={ClockIcon} size="sm" className="text-red-500 mr-2" />
           <Text className="text-sm text-typography-600">{campaignTime}</Text>
         </HStack>
+
+        {/* Volume */}
+        {request.volumeMl && (
+          <HStack className="items-center" space="sm">
+            <Icon as={DropletIcon} size="sm" className="text-red-500 mr-2" />
+            <Text className="text-sm text-typography-600">
+              Thể tích: {request.volumeMl} ml
+            </Text>
+          </HStack>
+        )}
 
         {/* Appointment Date and Note */}
         <VStack space="md">

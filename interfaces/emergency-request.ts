@@ -1,21 +1,43 @@
 import { IBase } from "./base";
+import { BloodGroup, BloodRh, BloodTypeComponent } from "./blood";
 
 export enum EmergencyRequestStatus {
   pending = "pending",
   approved = "approved",
   rejected = "rejected",
+  contacts_provided = "contacts_provided",
+  expired = "expired",
 }
 
-export enum BloodTypeComponent {
-  plasma = "plasma",
-  red_cells = "red_cells",
-  platelets = "platelets",
-  whole_blood = "whole_blood",
+// Update DTO for emergency request
+export interface UpdateEmergencyRequestDto {
+  requiredVolume?: number;
+  bloodGroup?: BloodGroup;
+  bloodRh?: BloodRh;
+  bloodTypeComponent?: BloodTypeComponent;
+  description?: string;
+  wardCode?: string;
+  districtCode?: string;
+  provinceCode?: string;
+  wardName?: string;
+  districtName?: string;
+  provinceName?: string;
+  longitude?: string;
+  latitude?: string;
 }
 
 export interface IBloodType {
   group: string;
   rh: string;
+}
+
+export interface ISuggestedContact {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  bloodType: IBloodType;
 }
 
 export interface IBloodUnit {
@@ -45,6 +67,7 @@ export interface IEmergencyRequestData {
   bloodUnit?: IBloodUnit | null;
   status: EmergencyRequestStatus;
   description: string;
+  suggestedContacts?: ISuggestedContact[];
   rejectionReason: string | null;
   startDate: string;
   endDate: string;

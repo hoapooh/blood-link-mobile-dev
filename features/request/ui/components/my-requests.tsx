@@ -11,15 +11,27 @@ import {
 } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { useGetEmergencyRequests } from "@/features/request/hooks";
-import { IBloodType } from "@/interfaces/emergency-request";
+import { IBloodType, IEmergencyRequestData } from "@/interfaces/emergency-request";
 import { useRouter } from "expo-router";
 import { AlertTriangle, X } from "lucide-react-native";
 import React from "react";
-import { ActivityIndicator, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
-const MyRequests = () => {
-	const { emergencyRequests, isLoading, isError, error, refetch } = useGetEmergencyRequests();
+interface MyRequestsProps {
+  emergencyRequests: IEmergencyRequestData[];
+  isLoading: boolean;
+  statusFilter: string;
+  getStatusLabel: (status: string) => string;
+  onClearFilters: () => void;
+}
+
+const MyRequests: React.FC<MyRequestsProps> = ({
+  emergencyRequests,
+  isLoading,
+  statusFilter,
+  getStatusLabel,
+  onClearFilters,
+}) => {
 	const router = useRouter();
 
 	const getStatusInfo = (status: string) => {
@@ -44,6 +56,20 @@ const MyRequests = () => {
 					textColor: "text-error-600",
 					icon: X,
 					iconColor: "text-error-500",
+				};
+			case "contacts_provided":
+				return {
+					color: "bg-info-500",
+					textColor: "text-info-600",
+					icon: CheckCircleIcon,
+					iconColor: "text-info-500",
+				};
+			case "expired":
+				return {
+					color: "bg-background-500",
+					textColor: "text-typography-600",
+					icon: ClockIcon,
+					iconColor: "text-typography-500",
 				};
 			default:
 				return {
@@ -98,27 +124,8 @@ const MyRequests = () => {
 		);
 	}
 
-	if (isError) {
-		return (
-			<View className="flex-1 items-center justify-center bg-background-50 px-6">
-				<Text className="text-red-500 text-center mb-4">
-					{error instanceof Error
-						? error.message
-						: "Không thể tải yêu cầu khẩn cấp"}
-				</Text>
-				<TouchableOpacity
-					onPress={() => refetch()}
-					className="bg-red-500 px-6 py-3 rounded-lg"
-				>
-					<Text className="text-white font-semibold">Thử lại</Text>
-				</TouchableOpacity>
-			</View>
-		);
-	}
-
 	return (
 		<VStack className="p-4" space="xl">
-			<Text className="text-lg font-semibold text-typography-900 mb-2">Yêu cầu khẩn cấp của tôi</Text>
 			{emergencyRequests.map((request) => {
 				const statusInfo = getStatusInfo(request.status);
 				const bloodTypeDisplay = getBloodTypeDisplay(request.bloodType);
@@ -152,7 +159,9 @@ const MyRequests = () => {
 										<BadgeText className="text-white font-medium text-xs capitalize">
 											{request.status === "pending" ? "Đang chờ" : 
 											 request.status === "approved" ? "Đã duyệt" : 
-											 request.status === "rejected" ? "Bị từ chối" : request.status}
+											 request.status === "rejected" ? "Bị từ chối" : 
+											 request.status === "contacts_provided" ? "Đã cung cấp danh bạ" :
+											 request.status === "expired" ? "Đã hết hạn" : request.status}
 										</BadgeText>
 									</Badge>
 									
@@ -209,26 +218,45 @@ const MyRequests = () => {
 			})}
 
 			{/* Empty state if no requests */}
-			{emergencyRequests.length === 0 && (
+			{emergencyRequests.length === 0 && !isLoading && (
 				<VStack className="items-center justify-center py-12 space-y-3">
 					<VStack className="bg-red-50 p-6 rounded-full">
 						<Icon as={AlertTriangle} size="xl" className="text-red-400" />
 					</VStack>
-					<Text className="text-lg font-medium text-typography-600">Không tìm thấy yêu cầu khẩn cấp</Text>
-					<Text className="text-sm text-typography-500 text-center max-w-xs">
-						Các yêu cầu máu khẩn cấp của bạn sẽ xuất hiện ở đây. Tạo yêu cầu mới nếu bạn cần hỗ trợ máu khẩn cấp.
+					<Text className="text-lg font-medium text-typography-600">
+						{statusFilter 
+							? "Không tìm thấy yêu cầu khẩn cấp phù hợp"
+							: "Không tìm thấy yêu cầu khẩn cấp"
+						}
 					</Text>
-					<Button 
-						variant="outline" 
-						action="primary" 
-						className="mt-4"
-						onPress={() => {
-							// Navigate to create emergency request
-							console.log("Navigate to create emergency request");
-						}}
-					>
-						<ButtonText>Tạo yêu cầu khẩn cấp</ButtonText>
-					</Button>
+					<Text className="text-sm text-typography-500 text-center max-w-xs">
+						{statusFilter 
+							? `Không có yêu cầu nào có trạng thái "${getStatusLabel(statusFilter)}". Thử thay đổi bộ lọc.`
+							: "Các yêu cầu máu khẩn cấp của bạn sẽ xuất hiện ở đây. Tạo yêu cầu mới nếu bạn cần hỗ trợ máu khẩn cấp."
+						}
+					</Text>
+					{statusFilter ? (
+						<Button 
+							variant="outline" 
+							action="primary" 
+							className="mt-4"
+							onPress={onClearFilters}
+						>
+							<ButtonText>Xóa bộ lọc</ButtonText>
+						</Button>
+					) : (
+						<Button 
+							variant="outline" 
+							action="primary" 
+							className="mt-4"
+							onPress={() => {
+								// Navigate to create emergency request
+								console.log("Navigate to create emergency request");
+							}}
+						>
+							<ButtonText>Tạo yêu cầu khẩn cấp</ButtonText>
+						</Button>
+					)}
 				</VStack>
 			)}
 		</VStack>

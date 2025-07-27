@@ -4,15 +4,15 @@ import { ICampaignData } from "./campaign";
 import { IUserData } from "./user";
 
 export enum RequestStatus {
-  pending = "pending",
   completed = "completed",
-  rejected = "rejected",
   result_returned = "result_returned",
   appointment_confirmed = "appointment_confirmed",
   appointment_cancelled = "appointment_cancelled",
   appointment_absent = "appointment_absent",
   customer_cancelled = "customer_cancelled",
   customer_checked_in = "customer_checked_in",
+  not_qualified = "not_qualified",
+  no_show_after_checkin = "no_show_after_checkin",
 }
 
 export interface IDonationRequestData {
@@ -24,11 +24,13 @@ export interface IDonationRequestData {
     campaign: ICampaignData | null;
     currentStatus: RequestStatus | null;
     appointmentDate: string | null;
+    volumeMl: number | null;
 }
 export interface ICreateDonationRequestPayload {
   campaignId: string;
   appointmentDate: string;
   note: string;
+  volumeMl: number;
 }
 export type IDonationRequest = IBase<IDonationRequestData>;
 export type IDonationRequestHistory = IBase<IDonationRequestData[]>;

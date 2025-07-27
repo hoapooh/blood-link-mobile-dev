@@ -35,17 +35,9 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
 
   // Status colors and Vietnamese translations - consistent with donation card
   const statusStyles: Record<RequestStatus, { bg: string; text: string }> = {
-    [RequestStatus.pending]: {
-      bg: "bg-yellow-100",
-      text: "text-yellow-600",
-    },
     [RequestStatus.completed]: {
       bg: "bg-green-100",
       text: "text-green-600",
-    },
-    [RequestStatus.rejected]: {
-      bg: "bg-red-100",
-      text: "text-red-600",
     },
     [RequestStatus.result_returned]: {
       bg: "bg-blue-100",
@@ -71,6 +63,14 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
       bg: "bg-blue-100",
       text: "text-blue-600",
     },
+    [RequestStatus.not_qualified]: {
+      bg: "bg-red-100",
+      text: "text-red-600",
+    },
+    [RequestStatus.no_show_after_checkin]: {
+      bg: "bg-orange-100",
+      text: "text-orange-600",
+    },
   };
 
   const getStatusStyle = (status: RequestStatus) => {
@@ -88,12 +88,8 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
     const normalizedStatus = status.toString().toLowerCase().replace(/\s+/g, '_') as RequestStatus;
     
     switch (normalizedStatus) {
-      case RequestStatus.pending:
-        return "Đang chờ";
       case RequestStatus.completed:
         return "Hoàn thành";
-      case RequestStatus.rejected:
-        return "Bị từ chối";
       case RequestStatus.result_returned:
         return "Đã trả kết quả";
       case RequestStatus.appointment_confirmed:
@@ -106,6 +102,10 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
         return "Đã hủy";
       case RequestStatus.customer_checked_in:
         return "Đã check-in";
+      case RequestStatus.not_qualified:
+        return "Không đủ điều kiện";
+      case RequestStatus.no_show_after_checkin:
+        return "Không đến sau check-in";
       default:
         // Fallback: display the original status with proper formatting
         return status.toString().replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -131,7 +131,10 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
     );
   }
 
-  const currentConfig = getStatusStyle(donation.currentStatus!) || getStatusStyle(RequestStatus.pending);
+  const currentConfig = getStatusStyle(donation.currentStatus!) || {
+    bg: "bg-gray-100",
+    text: "text-gray-600",
+  };
 
   return (
     <ScrollView 
@@ -173,9 +176,17 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
                 Ngày hẹn: {dayjs(donation.appointmentDate).format("DD/MM/YYYY")}
               </Text>
             </HStack>
+            {donation.volumeMl && (
+              <HStack className="items-center" space="sm">
+                
+                <Text className="text-sm text-gray-600">
+                  Thể tích dự kiến: {donation.volumeMl} ml
+                </Text>
+              </HStack>
+            )}
             {donation.note && (
               <HStack className="items-center" space="sm">
-                <Icon as={Mail} size="sm" className="text-red-500" />
+                
                 <Text className="text-sm text-gray-600">
                   Ghi chú: {donation.note}
                 </Text>
@@ -290,7 +301,9 @@ const DonationDetail: React.FC<DonationDetailProps> = ({ donationId }) => {
       )}
 
       {/* Donation Result Section */}
-      {(donation.currentStatus === RequestStatus.result_returned|| donation.currentStatus === RequestStatus.rejected) && (
+      {(donation.currentStatus === RequestStatus.result_returned || 
+        donation.currentStatus === RequestStatus.completed ||
+        donation.currentStatus === RequestStatus.not_qualified) && (
         <Card className="p-0 bg-white border border-outline-200 rounded-xl shadow-sm overflow-hidden">
           {/* Result Header */}
           <VStack space="xs" className="bg-gradient-to-r from-red-50 to-red-100 p-6 border-b border-gray-100">

@@ -67,6 +67,7 @@ export default function SignUpPage1() {
 
 	const handleLocationSave = (location: Partial<IUserUpdate>) => {
 		const newLocationData = {
+			address: location.address || "",
 			provinceCode: location.provinceCode || "",
 			provinceName: location.provinceName || "",
 			districtCode: location.districtCode || "",
@@ -80,6 +81,7 @@ export default function SignUpPage1() {
 		setLocationData(newLocationData);
 		// Set the address field in form
 		const addressText = formatLocationAddress({
+			address: location.address || "",
 			wardName: location.wardName || "",
 			districtName: location.districtName || "",
 			provinceName: location.provinceName || "",
@@ -219,7 +221,7 @@ export default function SignUpPage1() {
 							control={form.control}
 							render={({ field: { onChange, value } }) => (
 								<Select selectedValue={value} onValueChange={onChange}>
-									<SelectTrigger variant="outline" size="xl">
+									<SelectTrigger variant="outline" size="md">
 										<SelectInput
 											placeholder="Chọn giới tính"
 											value={

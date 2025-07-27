@@ -39,22 +39,7 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({ onSignOut }) => {
 					}}
 				/>
 
-				{/* <ActionButton
-					title="Cài đặt quyền riêng tư"
-					onPress={() => {
-						// TODO: Navigate to privacy settings
-						console.log("Privacy settings pressed");
-					}}
-				/>
-
-				<ActionButton
-					title="Cài đặt thông báo"
-					onPress={() => {
-						// TODO: Navigate to notification settings
-						console.log("Notification settings pressed");
-					}}
-				/> */}
-
+				
 				<ActionButton
 					title="Trợ giúp & Hỗ trợ"
 					onPress={() => {

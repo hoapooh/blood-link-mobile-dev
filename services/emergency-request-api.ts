@@ -1,6 +1,6 @@
 import axiosInstance from "@/config/axios-instance";
 import { CreateEmergencyRequestDto } from "@/interfaces/create-emergency-request";
-import { IEmergencyRequestData, IEmergencyRequestList } from "@/interfaces/emergency-request";
+import { IEmergencyRequestData, IEmergencyRequestList, UpdateEmergencyRequestDto } from "@/interfaces/emergency-request";
 import { isAxiosError } from "axios";
 
 export const emergencyRequestApi = {
@@ -48,6 +48,39 @@ export const emergencyRequestApi = {
       if (isAxiosError(error)) {
         throw new Error(
           error.response?.data?.message || "Failed to get emergency request details"
+        );
+      }
+      throw error;
+    }
+  },
+
+  updateEmergencyRequest: async (
+    requestId: string,
+    updateData: UpdateEmergencyRequestDto
+  ): Promise<IEmergencyRequestData> => {
+    try {
+      const response = await axiosInstance.patch(`/emergency-requests/${requestId}`, updateData);
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message || "Failed to update emergency request"
+        );
+      }
+      throw error;
+    }
+  },
+
+  deleteEmergencyRequest: async (
+    requestId: string
+  ): Promise<{ success: boolean; message: string }> => {
+    try {
+      const response = await axiosInstance.delete(`/emergency-requests/${requestId}`);
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message || "Failed to delete emergency request"
         );
       }
       throw error;

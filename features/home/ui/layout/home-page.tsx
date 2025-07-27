@@ -2,7 +2,7 @@ import { Box } from "@/components/ui/box";
 import React from "react";
 import { ScrollView } from "react-native";
 import HomeBanner from "../components/banner";
-import CampaignList from "../components/campaign-list";
+import CampaignSearchLayout from "../components/campaign-search-layout";
 import Introduction from "../components/centre-intro";
 
 export default function HomePage() {
@@ -12,7 +12,7 @@ export default function HomePage() {
         <HomeBanner />
         <Introduction/>
         <Box className="flex-1 p-4 min-h-0">
-          <CampaignList />
+          <CampaignSearchLayout />
         </Box>
       </ScrollView>
     </Box>

@@ -4,7 +4,7 @@ import { ScrollView } from "@/components/ui/scroll-view";
 import { VStack } from "@/components/ui/vstack";
 import React, { useState } from "react";
 import EmergencyRequest from "./emergency-request";
-import MyRequests from "./my-requests";
+import EmergencyRequestSearchLayout from "./emergency-request-search-layout";
 
 const RequestTabs = () => {
 	const [activeTab, setActiveTab] = useState<"emergency" | "history">("emergency");
@@ -60,7 +60,7 @@ const RequestTabs = () => {
 
 				
 
-				{activeTab === "history" && <MyRequests />}
+				{activeTab === "history" && <EmergencyRequestSearchLayout />}
 			</ScrollView>
 		</VStack>
 	);

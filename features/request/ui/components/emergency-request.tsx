@@ -7,6 +7,7 @@ import { Toast, ToastDescription, ToastTitle, useToast } from "@/components/ui/t
 import { VStack } from "@/components/ui/vstack";
 import { useCreateEmergencyRequest } from "@/features/request/hooks";
 import { CreateEmergencyRequestDto } from "@/interfaces/create-emergency-request";
+import { UpdateEmergencyRequestDto } from "@/interfaces/emergency-request";
 import { AlertTriangle, HeartIcon, Phone, Zap } from "lucide-react-native";
 import React, { useState } from "react";
 import BloodRequestForm from "./blood-request-form";
@@ -16,10 +17,10 @@ const EmergencyRequest = () => {
 	const { createRequestAsync, isLoading } = useCreateEmergencyRequest();
 	const toast = useToast();
 
-	const validateEmergencyRequest = (requestData: CreateEmergencyRequestDto): string | null => {
-		// Required field validation
-		if (!requestData.requiredVolume || requestData.requiredVolume < 1) {
-			return "Thể tích máu phải ít nhất là 1ml";
+	const validateEmergencyRequest = (requestData: CreateEmergencyRequestDto | UpdateEmergencyRequestDto): string | null => {
+		// Required field validation for create mode
+		if (!requestData.requiredVolume || requestData.requiredVolume < 100) {
+			return "Thể tích máu phải ít nhất là 100ml";
 		}
 
 		if (requestData.requiredVolume > 5000) {
@@ -45,9 +46,13 @@ const EmergencyRequest = () => {
 		setIsFormOpen(true);
 	};
 
-	const handleFormSubmit = async (requestData: CreateEmergencyRequestDto) => {
+	const handleFormSubmit = async (requestData: CreateEmergencyRequestDto | UpdateEmergencyRequestDto) => {
+		// Since this component is only used for creating emergency requests,
+		// we should only receive CreateEmergencyRequestDto here
+		const createData = requestData as CreateEmergencyRequestDto;
+		
 		// Client-side validation
-		const validationError = validateEmergencyRequest(requestData);
+		const validationError = validateEmergencyRequest(createData);
 		if (validationError) {
 			toast.show({
 				placement: "top",
@@ -62,7 +67,7 @@ const EmergencyRequest = () => {
 		}
 
 		try {
-			await createRequestAsync(requestData);
+			await createRequestAsync(createData);
 			
 			// Success notification
 			toast.show({
@@ -154,7 +159,7 @@ const EmergencyRequest = () => {
 								<VStack className="flex-1">
 									<Text className="font-semibold text-gray-900">Kiểm tra tức thì</Text>
 									<Text className="text-sm text-gray-600">
-										Loại máu phù hợp sẽ được kiểm tra trong ngân hàng máu ngay lập tức
+										Loại máu phù hợp sẽ được kiểm tra trong hệ thống và thông báo ngay lập tức. Nếu có người hiến máu phù hợp, bạn sẽ nhận được thông tin liên lạc của họ
 									</Text>
 								</VStack>
 							</HStack>
