@@ -14,25 +14,26 @@ import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
+import { Toast, ToastDescription, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { useDeleteEmergencyRequest, useGetEmergencyRequestDetail, useUpdateEmergencyRequest } from "@/features/request/hooks";
 import { UpdateEmergencyRequestDto } from "@/interfaces/emergency-request";
 import dayjs from "dayjs";
+import { useRouter } from "expo-router";
 import {
   AlertCircleIcon,
   CheckCircleIcon,
   ClockIcon,
   DropletIcon,
   EditIcon,
-  Mail,
   MapPin,
   PhoneIcon,
   Trash2Icon,
   UserIcon,
   X
 } from "lucide-react-native";
-import React, { useState } from "react";
-import { ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { RefreshControl, ScrollView } from "react-native";
 import BloodRequestForm from "./blood-request-form";
 
 interface EmergencyRequestDetailProps {
@@ -40,11 +41,13 @@ interface EmergencyRequestDetailProps {
 }
 
 const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ requestId }) => {
-  const { emergencyRequest, isLoading, isError, error } = useGetEmergencyRequestDetail(requestId);
+  const { emergencyRequest, isLoading, isError, error, refetch, isFetching } = useGetEmergencyRequestDetail(requestId);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const updateEmergencyRequest = useUpdateEmergencyRequest();
   const deleteEmergencyRequest = useDeleteEmergencyRequest();
+  const toast = useToast();
+  const router = useRouter();
 
   const handleUpdate = async (updateData: UpdateEmergencyRequestDto) => {
     try {
@@ -63,12 +66,50 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
     try {
       await deleteEmergencyRequest.deleteEmergencyRequest({ id: requestId });
       setShowDeleteDialog(false);
-      // Navigate back or show success message
-      // You might want to add navigation logic here
     } catch (error) {
       console.error('Delete failed:', error);
     }
   };
+
+  // Handle delete success - show toast and navigate back
+  useEffect(() => {
+    if (deleteEmergencyRequest.isSuccess) {
+      // Show success toast
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <Toast nativeID={`toast-${id}`} action="success" variant="outline">
+            <ToastTitle>Xóa yêu cầu thành công</ToastTitle>
+            <ToastDescription>
+              Yêu cầu máu khẩn cấp đã được xóa khỏi hệ thống
+            </ToastDescription>
+          </Toast>
+        ),
+      });
+
+      // Navigate back to request list after a short delay
+      setTimeout(() => {
+        router.push("/(request)" as any);
+      }, 1500);
+    }
+  }, [deleteEmergencyRequest.isSuccess, toast, router]);
+
+  // Handle delete error - show error toast
+  useEffect(() => {
+    if (deleteEmergencyRequest.isError) {
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <Toast nativeID={`toast-${id}`} action="error" variant="outline">
+            <ToastTitle>Xóa yêu cầu thất bại</ToastTitle>
+            <ToastDescription>
+              Đã xảy ra lỗi khi xóa yêu cầu. Vui lòng thử lại sau.
+            </ToastDescription>
+          </Toast>
+        ),
+      });
+    }
+  }, [deleteEmergencyRequest.isError, toast]);
   const getStatusInfo = (status: string) => {
     switch (status) {
       case "approved":
@@ -157,6 +198,10 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
     );
   }
 
+  const handleRefresh = async () => {
+    await refetch();
+  };
+
   const statusInfo = getStatusInfo(emergencyRequest.status);
   const bloodTypeDisplay = getBloodTypeDisplay(emergencyRequest.bloodType);
   const bloodTypeComponentDisplay = getBloodTypeComponentDisplay(emergencyRequest.bloodTypeComponent);
@@ -166,6 +211,16 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
     <ScrollView 
       className="flex-1 bg-gray-50"
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={isFetching}
+          onRefresh={handleRefresh}
+          colors={['#EF4444']} // Android
+          tintColor="#EF4444" // iOS
+          title="Kéo để cập nhật" // iOS
+          titleColor="#6B7280" // iOS
+        />
+      }
       contentContainerStyle={{ 
         padding: 16, 
         paddingBottom: 32 
@@ -177,13 +232,21 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
           <VStack space="md">
             <HStack className="justify-between items-center">
               <Text className="text-xl font-bold text-gray-900">
-                Chi tiết yêu cầu khẩn cấp
+                Chi tiết yêu cầu
               </Text>
-              <Badge className={`${statusInfo.bg} px-3 py-1 rounded-full`}>
-                <BadgeText className={`${statusInfo.text} text-sm font-medium`}>
-                  {statusInfo.label + ""}
-                </BadgeText>
-              </Badge>
+              <HStack className="items-center" space="sm">
+                {/* Auto-refresh indicator */}
+                {isFetching && !isLoading && (
+                  <Text className="text-xs text-gray-500">
+                    Cập nhật...
+                  </Text>
+                )}
+                <Badge className={`${statusInfo.bg} px-3 py-1 rounded-full`}>
+                  <BadgeText className={`${statusInfo.text} text-sm font-medium`}>
+                    {statusInfo.label + ""}
+                  </BadgeText>
+                </Badge>
+              </HStack>
             </HStack>
             
             {/* Blood Type Display */}
@@ -270,7 +333,7 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
           <Card className="p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-sm">
             <VStack space="md">
               <HStack className="items-center" space="sm">
-                <Icon as={UserIcon} size="sm" className="text-blue-600" />
+               
                 <Text className="text-lg font-bold text-blue-700">
                   Danh bạ người hiến máu phù hợp
                 </Text>
@@ -307,12 +370,12 @@ const EmergencyRequestDetail: React.FC<EmergencyRequestDetailProps> = ({ request
                             {contact.phone}
                           </Text>
                         </HStack>
-                        <HStack className="items-center" space="sm">
+                        {/* <HStack className="items-center" space="sm">
                           <Icon as={Mail} size="xs" className="text-gray-500" />
                           <Text className="text-sm text-gray-700">
                             {contact.email}
                           </Text>
-                        </HStack>
+                        </HStack> */}
                       </VStack>
                     </VStack>
                   </Card>

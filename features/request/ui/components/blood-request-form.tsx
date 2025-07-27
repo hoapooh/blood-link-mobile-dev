@@ -207,8 +207,8 @@ const BloodRequestForm: React.FC<BloodRequestFormProps> = ({
         wardName: user?.data?.wardName || "",
         districtName: user?.data?.districtName || "",
         provinceName: user?.data?.provinceName || "",
-        longitude: user?.data?.longitude?.toString() || "",
-        latitude: user?.data?.latitude?.toString() || "",
+        longitude: user?.data?.longitude || "",
+        latitude: user?.data?.latitude || "",
       };
       onSubmit(requestData);
     }
@@ -491,6 +491,12 @@ const BloodRequestForm: React.FC<BloodRequestFormProps> = ({
                     user?.data?.provinceName
                       ? `${user.data.wardName}, ${user.data.districtName}, ${user.data.provinceName}`
                       : "Vui lòng cập nhật địa chỉ trong cài đặt hồ sơ"}
+                  </Text>
+                  {/* Debug info for coordinates */}
+                  <Text className="text-xs text-gray-500">
+                    Tọa độ: {user?.data?.longitude && user?.data?.latitude 
+                      ? `${user.data.latitude}, ${user.data.longitude}` 
+                      : "Chưa có tọa độ"}
                   </Text>
                 </VStack>
               </Card>

@@ -240,12 +240,12 @@ const CampaignDetailSection: React.FC<CampaignDetailSectionProps> = ({
                 Nhận đồ ăn nhẹ và nước uống sau hiến máu
               </Text>
             </HStack>
-            <HStack space="sm" className="items-center">
+            {/* <HStack space="sm" className="items-center">
               <Icon as={CheckCircle2} size="sm" className="text-red-500" />
               <Text className="text-base text-typography-700">
                 Được ưu tiên khi cần máu trong trường hợp khẩn cấp
               </Text>
-            </HStack>
+            </HStack> */}
           </VStack>
         </VStack>
 

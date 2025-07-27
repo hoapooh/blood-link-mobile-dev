@@ -3,21 +3,25 @@ import { HStack } from "@/components/ui/hstack";
 import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectTrigger } from "@/components/ui/select";
 import { VStack } from "@/components/ui/vstack";
 import { EmergencyRequestStatus } from "@/interfaces/emergency-request";
-import { ChevronDownIcon } from "lucide-react-native";
+import { ChevronDownIcon, RefreshCwIcon } from "lucide-react-native";
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useGetEmergencyRequests } from "../../hooks";
 import MyRequests from "./my-requests";
 
 const EmergencyRequestSearchLayout = () => {
   const [statusFilter, setStatusFilter] = useState<string>("");
   
-  const { emergencyRequests, isLoading, isError, error, refetch } = useGetEmergencyRequests({
+  const { emergencyRequests, isLoading, isError, error, refetch, isFetching } = useGetEmergencyRequests({
     status: statusFilter || undefined,
   });
 
   const handleClearStatus = () => {
     setStatusFilter("");
+  };
+
+  const handleRefresh = async () => {
+    await refetch();
   };
 
   const getStatusLabel = (status: string) => {
@@ -71,41 +75,57 @@ const EmergencyRequestSearchLayout = () => {
       
       {/* Filter Section */}
       <VStack space="md" className="mb-4 px-4">
-        {/* Status Filter */}
+        {/* Status Filter with Refresh Button */}
         <HStack className="justify-between items-center">
-            <Text className="text-lg font-semibold text-typography-900 mb-2">
-        Kết quả tìm kiếm
-      </Text>
-          <Box className="w-40">
-            <Select 
-              selectedValue={statusFilter} 
-              onValueChange={setStatusFilter}
+          <Text className="text-lg font-semibold text-typography-900 mb-2">
+            Kết quả tìm kiếm
+          </Text>
+          <HStack space="sm" className="items-center">
+            {/* Manual Refresh Button */}
+            <TouchableOpacity
+              onPress={handleRefresh}
+              className="bg-red-50 p-2 rounded-lg mr-2"
+              disabled={isFetching}
             >
-              <SelectTrigger>
-                <SelectInput 
-                  placeholder="Lọc theo trạng thái" 
-                  value={getDisplayValue()}
-                  className="text-sm"
-                />
-                <SelectIcon as={ChevronDownIcon} size="xs" />
-              </SelectTrigger>
-              <SelectPortal>
-                <SelectBackdrop />
-                <SelectContent>
-                  <SelectDragIndicatorWrapper>
-                    <SelectDragIndicator />
-                  </SelectDragIndicatorWrapper>
-                  <SelectItem label="Tất cả" value="" />
-                  <SelectItem label="Đang chờ" value={EmergencyRequestStatus.pending} />
-                  <SelectItem label="Đã duyệt" value={EmergencyRequestStatus.approved} />
-                  <SelectItem label="Bị từ chối" value={EmergencyRequestStatus.rejected} />
-                  <SelectItem label="Đã cung cấp danh bạ" value={EmergencyRequestStatus.contacts_provided} />
-                  <SelectItem label="Đã hết hạn" value={EmergencyRequestStatus.expired} />
-                </SelectContent>
-              </SelectPortal>
-            </Select>
-          </Box>
-          
+              <RefreshCwIcon 
+                size={16} 
+                color={isFetching ? "#9CA3AF" : "#EF4444"}
+                style={{ 
+                  transform: [{ rotate: isFetching ? '180deg' : '0deg' }] 
+                }}
+              />
+            </TouchableOpacity>
+            
+            <Box className="w-40">
+              <Select 
+                selectedValue={statusFilter} 
+                onValueChange={setStatusFilter}
+              >
+                <SelectTrigger>
+                  <SelectInput 
+                    placeholder="Lọc theo trạng thái" 
+                    value={getDisplayValue()}
+                    className="text-sm"
+                  />
+                  <SelectIcon as={ChevronDownIcon} size="xs" />
+                </SelectTrigger>
+                <SelectPortal>
+                  <SelectBackdrop />
+                  <SelectContent>
+                    <SelectDragIndicatorWrapper>
+                      <SelectDragIndicator />
+                    </SelectDragIndicatorWrapper>
+                    <SelectItem label="Tất cả" value="" />
+                    <SelectItem label="Đang chờ" value={EmergencyRequestStatus.pending} />
+                    <SelectItem label="Đã duyệt" value={EmergencyRequestStatus.approved} />
+                    <SelectItem label="Bị từ chối" value={EmergencyRequestStatus.rejected} />
+                    <SelectItem label="Đã cung cấp danh bạ" value={EmergencyRequestStatus.contacts_provided} />
+                    <SelectItem label="Đã hết hạn" value={EmergencyRequestStatus.expired} />
+                  </SelectContent>
+                </SelectPortal>
+              </Select>
+            </Box>
+          </HStack>
         </HStack>
         
         {/* Filter Results Info */}
@@ -116,18 +136,40 @@ const EmergencyRequestSearchLayout = () => {
             {statusFilter && ` có trạng thái "${getStatusLabel(statusFilter)}"`}
           </Text>
         )}
+        
+        {/* Auto-refresh indicator */}
+        {isFetching && !isLoading && (
+          <Text className="text-xs text-gray-500 px-1">
+            Đang cập nhật dữ liệu...
+          </Text>
+        )}
       </VStack>
       
-      {/* Emergency Request List */}
-      <MyRequests 
-        emergencyRequests={emergencyRequests || []}
-        isLoading={isLoading}
-        statusFilter={statusFilter}
-        getStatusLabel={getStatusLabel}
-        onClearFilters={() => {
-          setStatusFilter("");
-        }}
-      />
+      {/* Emergency Request List with Pull-to-Refresh */}
+      <ScrollView
+        className="flex-1"
+        refreshControl={
+          <RefreshControl
+            refreshing={isFetching}
+            onRefresh={handleRefresh}
+            colors={['#EF4444']} // Android
+            tintColor="#EF4444" // iOS
+            title="Kéo để cập nhật" // iOS
+            titleColor="#6B7280" // iOS
+          />
+        }
+        showsVerticalScrollIndicator={false}
+      >
+        <MyRequests 
+          emergencyRequests={emergencyRequests || []}
+          isLoading={isLoading}
+          statusFilter={statusFilter}
+          getStatusLabel={getStatusLabel}
+          onClearFilters={() => {
+            setStatusFilter("");
+          }}
+        />
+      </ScrollView>
     </Box>
   );
 };
