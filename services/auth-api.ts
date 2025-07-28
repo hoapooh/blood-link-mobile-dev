@@ -1,12 +1,7 @@
 import { isAxiosError } from "axios";
 
 import axiosInstance from "@/config/axios-instance";
-import {
-    IUser,
-    IUserFindNearBy,
-    IUserFindNearByParams,
-    IUserUpdate,
-} from "@/interfaces/user";
+import { IUser, IUserFindNearBy, IUserFindNearByParams, IUserUpdate } from "@/interfaces/user";
 
 export const authApi = {
 	getCurrentProfile: async (): Promise<IUser> => {
@@ -35,7 +30,7 @@ export const authApi = {
 
 	findNearByUsers: async (params: IUserFindNearByParams): Promise<IUserFindNearBy> => {
 		try {
-			const response = await axiosInstance.get("/customers/find-nearby", { params });
+			const response = await axiosInstance.post("/customers/find-by-blood-type", params);
 			return response.data;
 		} catch (error) {
 			if (isAxiosError(error)) {

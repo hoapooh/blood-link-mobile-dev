@@ -18,6 +18,8 @@ const NearBy = () => {
 		enabled: hasSearched && !!selectedGroup && !!selectedRh && radius > 0,
 	});
 
+	console.log(nearbyUsers);
+
 	const handleFilter = () => {
 		if (selectedGroup && selectedRh && radius > 0) {
 			setHasSearched(true);
